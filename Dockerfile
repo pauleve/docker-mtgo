@@ -46,7 +46,8 @@ COPY --from=builder /dist/dotwine $WINEPREFIX
 COPY --from=builder /dist/mtgo.exe $HOME/mtgo.exe
 COPY extra/mtgo.sh $HOME/mtgo.sh
 
-#USER root
-#RUN chown -R wine: $HOME
+USER root
+RUN chown -R wine: $HOME
 
+USER wine
 CMD bash $HOME/mtgo.sh
