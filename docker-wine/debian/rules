@@ -12,17 +12,6 @@ override_dh_auto_configure:
 
 
 	# Run configure
-ifeq ($(DEB_BUILD_ARCH), amd64)
-	./configure --prefix=/opt/wine-devel \
-				--libdir=\$${prefix}/lib64 \
-				--mandir=\$${prefix}/share/man \
-				--infodir=\$${prefix}/share/info \
-				--enable-win64 \
-				--with-gstreamer \
-				--with-xattr \
-				--with-xcb \
-				$(CONFFLAGS)
-else
 	./configure --prefix=/opt/wine-devel \
 				--libdir=\$${prefix}/lib \
 				--mandir=\$${prefix}/share/man \
@@ -30,8 +19,10 @@ else
 				--with-gstreamer \
 				--with-xattr \
 				--with-xcb \
+				--disable-tests \
+				--without-gphoto \
+				--without-cups \
 				$(CONFFLAGS)
-endif
 
 
 override_dh_auto_test:

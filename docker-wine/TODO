@@ -1,4 +1,0 @@
-debian/rules:
-    --disable-tests
-    --without-gphoto (+ remove deps)
-    --without-cups (+ remove deps)

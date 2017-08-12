@@ -1,19 +1,20 @@
-FROM panard/wine:stable as builder
+FROM panard/wine:mtgo as builder
 MAINTAINER Panard <panard@backzone.net>
 ENV WINEPREFIX /dist/dotwine
 
 RUN	apt-get update && \
 	apt-get install -y --no-install-recommends \
-        wget \
+        curl \
+        xauth \
         xvfb
 
 RUN mkdir -p $WINEPREFIX && \
     winecfg && \
     xvfb-run -a winetricks -q corefonts vcrun2015 dotnet452 win7
 
-RUN wget http://mtgoclientdepot.onlinegaming.wizards.com/setup.exe -O /dist/mtgo.exe
+RUN curl -L http://mtgoclientdepot.onlinegaming.wizards.com/setup.exe -o /dist/mtgo.exe
 
-FROM panard/wine:stable
+FROM panard/wine:mtgo
 MAINTAINER Panard <panard@backzone.net>
 
 # This Dockerfile is heavily inspired by
