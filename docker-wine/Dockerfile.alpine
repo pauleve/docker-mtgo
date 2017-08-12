@@ -1,0 +1,17 @@
+FROM i386/alpine:edge
+MAINTAINER Panard <panard@inzenet.org>
+
+ENV WINEARCH win32
+RUN	apk --no-cache add --update \
+        ca-certificates \
+        cabextract \
+        freetype \
+        libpng \
+        ncurses-libs \
+        wine \
+        wget && update-ca-certificates
+RUN wget -O /usr/local/bin/winetricks \
+        --no-check-certificate \
+        https://raw.githubusercontent.com/Winetricks/winetricks/master/src/winetricks && \
+    chmod +x /usr/local/bin/winetricks
+

@@ -1,6 +1,4 @@
 
-all: wine-stable
-
-wine-%:
-	docker build -t panard/wine:$* --build-arg WINE_BUILD=$* .
+wine-mtgo:
+	docker build -t panard/wine:mtgo .
 

@@ -1,0 +1,4 @@
+/opt/wine-devel/lib64/libwine.so*
+/opt/wine-devel/lib64/wine
+/opt/wine-devel/bin/wine64
+/opt/wine-devel/bin/wine64-preloader
