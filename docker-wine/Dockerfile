@@ -8,7 +8,8 @@ WORKDIR /usr/src
 RUN apt-get update && \
     apt-get install -y devscripts build-essential
 
-ENV WINE_GIT 178104b59b0415fd24f48a14f921a30d03fcef3e
+#ENV WINE_GIT 178104b59b0415fd24f48a14f921a30d03fcef3e
+ENV WINE_GIT mtgo-dwrite
 RUN curl -LO https://github.com/theli-ua/wine/archive/${WINE_GIT}.zip && \
     unzip ${WINE_GIT}.zip
 WORKDIR /usr/src/wine-$WINE_GIT
@@ -30,8 +31,6 @@ RUN apt-get update && \
         cabextract \
         curl \
         libglib2.0-0 \
-        libgphoto2-6 \
-        libgphoto2-port12 \
         libgstreamer-plugins-base1.0-0 \
         libgstreamer1.0-0 \
         liblcms2-2 \

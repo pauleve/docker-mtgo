@@ -1,13 +1,14 @@
 #!/bin/bash
 
+defaultcmd="bash mtgo.sh"
+
 image=panard/mtgo:latest
-cmd=""
+cmd=$defaultcmd
 opts=""
 
 args="$(getopt --longoptions winecfg,cmd:,name: -- "${0}" "${@}")"
 eval set -- $args
 
-defaultcmd="bash mtgo.sh"
 
 while [ -n "${1:-}" ]; do
 case "${1:-}" in
@@ -30,9 +31,10 @@ run() {
     "${@}"
 }
 
+#opts="${opts} -v /etc/localtime:/etc/localtime:ro"
+opts="${opts} -v $HOME/.Xauthority:/home/wine/.Xauthority:ro"
+
 #-v /run/user/`id -u`/pulse/native:/run/user/1000/pulse/native \
-#-v /etc/localtime:/etc/localtime:ro \
-#-v $HOME/.Xauthority:/home/wine/.Xauthority:ro \
 #-v /dev/snd:/dev/snd \
 #--net=host \
 

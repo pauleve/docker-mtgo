@@ -9,7 +9,7 @@ while [ -n "${1:-}" ]; do
    shift
 done
 
-$do_winecfg && winecfg
+$do_winecfg && (winecfg ; wineserver -k)
 wine mtgo.exe
 echo "MTGO will start shortly. Press Enter when you have exited it."
 read
