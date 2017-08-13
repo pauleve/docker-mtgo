@@ -20,9 +20,9 @@ override_dh_auto_configure:
 				--with-xattr \
 				--with-xcb \
 				--disable-tests \
-				--without-gphoto \
-				--without-cups \
 				$(CONFFLAGS)
+				#--without-cups \
+				#--without-cups \
 
 
 override_dh_auto_test:

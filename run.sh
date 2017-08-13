@@ -33,6 +33,7 @@ run() {
 
 #opts="${opts} -v /etc/localtime:/etc/localtime:ro"
 opts="${opts} -v $HOME/.Xauthority:/home/wine/.Xauthority:ro"
+opts="${opts} --net=host"
 
 #-v /run/user/`id -u`/pulse/native:/run/user/1000/pulse/native \
 #-v /dev/snd:/dev/snd \

@@ -1,0 +1,7 @@
+/opt/wine-staging/lib/libwine.so*
+/opt/wine-staging/lib/wine
+/opt/wine-staging/bin/wine
+/opt/wine-staging/share/man/man?/wine.?*
+/opt/wine-staging/share/man/de.UTF-8/man?/wine.?*
+/opt/wine-staging/share/man/fr.UTF-8/man?/wine.?*
+/opt/wine-staging/share/man/pl.UTF-8/man?/wine.?*

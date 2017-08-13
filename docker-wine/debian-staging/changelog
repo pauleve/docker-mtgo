@@ -1,0 +1,3 @@
+wine-staging (2.2.0~stretch) unstable; urgency=low
+  * Auto build.
+ -- Michael Müller <michael@fds-team.de>  Sun, 13 Aug 2017 09:52:58 -0000

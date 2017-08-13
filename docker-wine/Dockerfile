@@ -9,12 +9,15 @@ RUN apt-get update && \
     apt-get install -y devscripts build-essential
 
 #ENV WINE_GIT 178104b59b0415fd24f48a14f921a30d03fcef3e
-ENV WINE_GIT mtgo-dwrite
+ENV WINE_GIT mtgo
 RUN curl -LO https://github.com/theli-ua/wine/archive/${WINE_GIT}.zip && \
     unzip ${WINE_GIT}.zip
 WORKDIR /usr/src/wine-$WINE_GIT
 
-COPY debian /usr/src/wine-$WINE_GIT/debian
+COPY debian-devel /usr/src/wine-$WINE_GIT/debian
+RUN curl -L https://source.winehq.org/patches/data/136421 \
+    | patch -p1
+
 RUN mk-build-deps -i -r -t "apt-get -y --no-install-recommends" debian/control
 RUN debuild --no-lintian -us -uc -b -j3
 RUN rm -v /usr/src/wine-devel-d*
@@ -31,6 +34,8 @@ RUN apt-get update && \
         cabextract \
         curl \
         libglib2.0-0 \
+        libgphoto2-6 \
+        libgphoto2-port12 \
         libgstreamer-plugins-base1.0-0 \
         libgstreamer1.0-0 \
         liblcms2-2 \

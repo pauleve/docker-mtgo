@@ -1,4 +1,4 @@
-Source: wine-devel
+Source: wine-staging
 Section: otherosfs
 Priority: optional
 Maintainer: Michael Müller <michael@fds-team.de>
@@ -14,11 +14,12 @@ Build-Depends: autotools-dev,
                flex,
                fontforge,
                gawk,
-               gcc-6,
+               gcc-4.5 | gcc-4.7 | gcc-4.9 | gcc-5 (>= 5.3) | gcc-6,
                gettext,
                libacl1-dev,
                libasound2-dev,
                libcapi20-dev,
+               libcups2-dev,
                libdbus-1-dev,
                libesd0 | libesd-alsa0,
                libesd0-dev,
@@ -27,6 +28,7 @@ Build-Depends: autotools-dev,
                libgl1-mesa-dev,
                libglu1-mesa-dev,
                libgnutls28-dev | libgnutls-dev,
+               libgphoto2-dev | libgphoto2-6-dev | libgphoto2-2-dev (>= 2.4.6),
                libgsm1-dev,
                libgstreamer1.0-dev,
                libgstreamer-plugins-base1.0-dev,
@@ -46,9 +48,12 @@ Build-Depends: autotools-dev,
                libssl-dev,
                libstdc++6-4.5-dev | libstdc++-dev,
                libtiff5-dev | libtiff4-dev | libtiff-dev,
+               libtxc-dxtn-s2tc-dev,
                libudev-dev,
                libv4l-dev,
+               libva-dev,
                libx11-dev,
+               libx11-xcb-dev,
                libxcomposite-dev,
                libxcursor-dev,
                libxext-dev,
@@ -70,7 +75,7 @@ Build-Depends: autotools-dev,
                x11proto-xinerama-dev
 Standards-Version: 3.9.5
 
-Package: wine-devel-i386
+Package: wine-staging-i386
 Architecture: i386
 Multi-Arch: foreign
 Pre-Depends: dpkg (>= 1.14.12ubuntu3), ${misc:Pre-Depends}
@@ -89,7 +94,7 @@ Description: official WineHQ build of the popular Wine software
  .
  This package provides support for loading 32-bit x86 Windows applications.
 
-Package: wine-devel-amd64
+Package: wine-staging-amd64
 Architecture: amd64
 Multi-Arch: foreign
 Pre-Depends: dpkg (>= 1.14.12ubuntu3), ${misc:Pre-Depends}
@@ -108,7 +113,7 @@ Description: official WineHQ build of the popular Wine software
  .
  This package provides support for loading 64-bit x86 Windows applications.
 
-Package: wine-devel-arm
+Package: wine-staging-arm
 Architecture: armhf
 Multi-Arch: foreign
 Pre-Depends: dpkg (>= 1.14.12ubuntu3), ${misc:Pre-Depends}
@@ -127,14 +132,14 @@ Description: official WineHQ build of the popular Wine software
  .
  This package provides support for loading 32-bit ARM Windows applications.
 
-Package: wine-devel
+Package: wine-staging
 Architecture: i386 amd64 armhf
 Multi-Arch: foreign
 Pre-Depends: dpkg (>= 1.14.12ubuntu3), ${misc:Pre-Depends}
 Depends:    ${misc:Depends}, ${shlibs:Depends},
-            wine-devel-i386  (= ${binary:Version}) [i386 amd64],
-            wine-devel-amd64 (= ${binary:Version}) [amd64],
-            wine-devel-arm   (= ${binary:Version}) [armhf],
+            wine-staging-i386  (= ${binary:Version}) [i386 amd64],
+            wine-staging-amd64 (= ${binary:Version}) [amd64],
+            wine-staging-arm   (= ${binary:Version}) [armhf],
 Section: otherosfs
 Priority: optional
 Description: official WineHQ build of the popular Wine software
@@ -148,14 +153,14 @@ Description: official WineHQ build of the popular Wine software
  executables as well as the Wine project's free version of the Windows API
  for running programs ported from Windows.
 
-Package: wine-devel-dev
+Package: wine-staging-dev
 Architecture: i386 amd64 armhf
 Pre-Depends: dpkg (>= 1.14.12ubuntu3), ${misc:Pre-Depends}
 Depends:    libc6-dev,
             ${shlibs:Depends},
-            wine-devel-i386  (= ${binary:Version}) [i386 amd64],
-            wine-devel-amd64 (= ${binary:Version}) [amd64],
-            wine-devel-arm   (= ${binary:Version}) [armhf],
+            wine-staging-i386  (= ${binary:Version}) [i386 amd64],
+            wine-staging-amd64 (= ${binary:Version}) [amd64],
+            wine-staging-arm   (= ${binary:Version}) [armhf],
 Section: libdevel
 Priority: optional
 Description: official WineHQ build of the popular Wine software
@@ -168,14 +173,14 @@ Description: official WineHQ build of the popular Wine software
  This package consists of the development files needed to compile programs
  using wine's free version of the Microsoft Windows API.
 
-Package: wine-devel-dbg
+Package: wine-staging-dbg
 Architecture: i386 amd64 armhf
 Multi-Arch: same
 Pre-Depends: dpkg (>= 1.14.12ubuntu3), ${misc:Pre-Depends}
 Depends:    ${shlibs:Depends},
-            wine-devel-i386  (= ${binary:Version}) [i386 amd64],
-            wine-devel-amd64 (= ${binary:Version}) [amd64],
-            wine-devel-arm   (= ${binary:Version}) [armhf],
+            wine-staging-i386  (= ${binary:Version}) [i386 amd64],
+            wine-staging-amd64 (= ${binary:Version}) [amd64],
+            wine-staging-arm   (= ${binary:Version}) [armhf],
 Section: debug
 Priority: optional
 Description: official WineHQ build of the popular Wine software
@@ -188,9 +193,9 @@ Description: official WineHQ build of the popular Wine software
  This package includes debugging symbols useful for reporting crashes and
  other failures.
 
-Package: winehq-devel
+Package: winehq-staging
 Architecture: i386 amd64 armhf
-Depends: wine-devel, ${misc:Depends}
+Depends: wine-staging, ${misc:Depends}
 Section: otherosfs
 Priority: optional
 Replaces:   wine, wine1.4, wine1.5, wine1.6, wine1.7, wine-i386, wine1.4-i386,
@@ -208,6 +213,13 @@ Description: official WineHQ build of the popular Wine software
  does not require Microsoft Windows, however it can use native system dll
  files in place of its own if they are available.
  .
- This compatibility package allows to use wine-devel system-wide as
+ This compatibility package allows to use wine-staging system-wide as
  the default Wine version.
 
+Package: wine-staging-compat
+Architecture: i386 amd64
+Depends: winehq-staging, ${misc:Depends}
+Priority: extra
+Section: oldlibs
+Description: Transitional dummy package
+ This is a transitional dummy package. It can safely be removed.

@@ -1,0 +1,3 @@
+# Wine preloader needs static linking to reserve memory and work properly, see
+# the comments at loader/preloader.c for a fuller explanation
+wine-staging-i386 binary: statically-linked-binary /opt/wine-staging/bin/wine-preloader
