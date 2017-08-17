@@ -45,10 +45,11 @@ ENV PULSE_SERVER unix:/run/user/$WINE_UID/pulse/native
 USER wine
 COPY --from=builder /dist/dotwine $WINEPREFIX
 COPY --from=builder /dist/mtgo.exe $HOME/mtgo.exe
-COPY extra/mtgo.sh $HOME/mtgo.sh
+COPY extra/mtgo.sh $HOME/mtgo
 
 USER root
-RUN chown -R wine: $HOME
+RUN chown -R wine: $HOME && \
+    chmod +x $HOME/mtgo
 
 USER wine
-CMD bash $HOME/mtgo.sh
+CMD $HOME/mtgo
