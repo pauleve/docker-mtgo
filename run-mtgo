@@ -1,7 +1,6 @@
 #!/bin/bash
 
-defaultcmd="bash mtgo.sh"
-#defaultcmd="./mtgo"
+defaultcmd="mtgo"
 
 image=panard/mtgo:latest
 name=mtgo_running
