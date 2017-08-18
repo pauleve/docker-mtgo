@@ -9,7 +9,7 @@ See https://appdb.winehq.org/objectManager.php?sClass=version&iId=32007 for more
 
 ## Usage
 
-### Get last tested image
+### Get latest tested image
 
 ```
 docker pull panard/mtgo
