@@ -13,6 +13,8 @@ validate-test:
 	docker tag mtgo:test panard/mtgo:$(shell date +%F)
 	docker tag mtgo:staging panard/mtgo:staging
 	docker tag mtgo:staging panard/mtgo:staging-$(shell date +%F)
+
+push:
 	docker push panard/mtgo:staging
 	docker push panard/mtgo:staging-$(shell date +%F)
 	docker push panard/mtgo:latest
