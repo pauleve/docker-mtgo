@@ -42,14 +42,12 @@ RUN useradd -u $WINE_UID -d /home/wine -m -s /bin/bash wine
 # Adding the link to the pulseaudio server for the client to find it.
 ENV PULSE_SERVER unix:/run/user/$WINE_UID/pulse/native
 
-USER wine
+COPY extra/mtgo.sh /usr/local/bin/mtgo
 COPY --from=builder /dist/dotwine $WINEPREFIX
-COPY --from=builder /dist/mtgo.exe $HOME/mtgo.exe
-COPY extra/mtgo.sh $HOME/mtgo
+COPY --from=builder /dist/mtgo.exe /opt/mtgo/mtgo.exe
 
-USER root
 RUN chown -R wine: $HOME && \
-    chmod +x $HOME/mtgo
+    chmod +x /usr/local/bin/mtgo
 
 USER wine
 CMD $HOME/mtgo
