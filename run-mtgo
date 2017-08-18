@@ -13,22 +13,27 @@ Usage: $0 [opts] [image]
 
 Options:
     -h, --help          display this message and exit
+    --cmd               initial command (default: $cmd)
     --name              container name (default: $name)
     --shell             start an interactive shell instead of MTGO
     --winecfg           run winecfg before calling MTGO
-    --cmd               initial command (default: $cmd)
+    --dry-run           simply print the docker run command
     -e                  docker run option (environment)
     -v                  docker run option (mount volume)
     -u                  docker run option (change user)
 "
 }
 
-args="$(getopt -n "${0}" -o hv:u:e: --longoptions help,winecfg,shell,cmd:,name: -- "${0}" "${@}")"
+args="$(getopt -n "${0}" -o hv:u:e: --longoptions dry-run,help,winecfg,shell,cmd:,name: -- "${0}" "${@}")"
 eval set -- $args
+
+do_run=true
 
 while [ -n "${1:-}" ]; do
 case "${1:-}" in
     --help|-h)  usage && exit 0 ;;
+    --dry-run)
+        do_run=false ;;
     --winecfg)
         cmd="${defaultcmd} $1" ;;
     --shell)
@@ -37,12 +42,8 @@ case "${1:-}" in
         cmd="$1" ;;
      --name) shift;
         name="$1" ;;
-     -e) shift
-        opts="${opts} -e $1" ;;
-     -v) shift
-        opts="${opts} -v $1" ;;
-     -u) shift
-        opts="${opts} -u $1" ;;
+     -e|-v|-u)
+        opts="${opts} $1 $2" ;;
      --) shift ; shift
         if [ -n "${1:-}" ]; then
             image=$1
@@ -53,7 +54,9 @@ done
 
 run() {
     echo "${@}"
-    "${@}"
+    if $do_run; then
+        "${@}"
+    fi
 }
 
 opts="${opts} -v /tmp/.X11-unix:/tmp/.X11-unix:rw"
