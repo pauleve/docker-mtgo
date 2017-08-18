@@ -1,7 +1,9 @@
 
 staging:
 	docker build -t mtgo:staging .
-	./run.sh mtgo:staging --name mtgo_staging
+
+prepare-staging:
+	./run-mtgo --name mtgo_staging mtgo:staging
 
 commit-staging:
 	docker commit mtgo_staging mtgo:test
