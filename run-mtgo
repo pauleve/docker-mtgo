@@ -25,6 +25,10 @@ Options:
 }
 
 args="$(getopt -n "${0}" -o hv:u:e: --longoptions dry-run,help,winecfg,shell,cmd:,name: -- "${0}" "${@}")"
+if [ $? -ne 0 ]; then
+    usage
+    exit 1
+fi
 eval set -- $args
 
 do_run=true
