@@ -17,12 +17,13 @@ Options:
     --shell             start an interactive shell instead of MTGO
     --winecfg           run winecfg before calling MTGO
     --cmd               initial command (default: $cmd)
+    -e                  docker run option (environment)
     -v                  docker run option (mount volume)
     -u                  docker run option (change user)
 "
 }
 
-args="$(getopt -n "${0}" -o hv:u: --longoptions help,winecfg,shell,cmd:,name: -- "${0}" "${@}")"
+args="$(getopt -n "${0}" -o hv:u:e: --longoptions help,winecfg,shell,cmd:,name: -- "${0}" "${@}")"
 eval set -- $args
 
 while [ -n "${1:-}" ]; do
@@ -36,6 +37,8 @@ case "${1:-}" in
         cmd="$1" ;;
      --name) shift;
         name="$1" ;;
+     -e) shift
+        opts="${opts} -e $1" ;;
      -v) shift
         opts="${opts} -v $1" ;;
      -u) shift
@@ -58,7 +61,6 @@ opts="${opts} -v $HOME/.Xauthority:/home/wine/.Xauthority:ro"
 opts="${opts} --net=host --ipc=host"
 
 opts="${opts} -v /etc/timezone:/etc/timezone:ro -v /etc/localtime:/etc/localtime:ro"
-#opts="${opts} -e QT_X11_NO_MITSHM=1"
 
 if [ -n "${name}" ]; then
     opts="${opts} --name ${name}"
@@ -66,7 +68,6 @@ fi
 
 #-v /run/user/`id -u`/pulse/native:/run/user/1000/pulse/native \
 #-v /dev/snd:/dev/snd \
-#--net=host \
 
 run docker run --privileged --rm -it -e DISPLAY \
     ${opts} ${image} ${cmd}
