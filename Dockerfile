@@ -8,8 +8,8 @@ RUN	apt-get update && \
         xauth \
         xvfb
 
-RUN mkdir -p $WINEPREFIX && \
-    winecfg && \
+USER $WINE_USER
+RUN winecfg && \
     xvfb-run -a winetricks -q corefonts vcrun2015 dotnet452 win7
 
 RUN curl -L http://mtgoclientdepot.onlinegaming.wizards.com/setup.exe -o /dist/mtgo.exe
@@ -30,24 +30,15 @@ MAINTAINER Panard <panard@backzone.net>
 #        libp11-kit-gnome-keyring:i386
 
 
-# replace by your user id
-ENV HOME /home/wine
-WORKDIR /home/wine
-ENV WINEPREFIX /home/wine/.wine
 ENV WINEDEBUG -all
 
-ENV WINE_UID 1000
-RUN useradd -u $WINE_UID -d /home/wine -m -s /bin/bash wine
-
-# Adding the link to the pulseaudio server for the client to find it.
-ENV PULSE_SERVER unix:/run/user/$WINE_UID/pulse/native
+#ENV PULSE_SERVER unix:/run/user/$WINE_UID/pulse/native
 
 COPY extra/mtgo.sh /usr/local/bin/mtgo
-COPY --from=builder /dist/dotwine $WINEPREFIX
+RUN chmod +x /usr/local/bin/mtgo
+
 COPY --from=builder /dist/mtgo.exe /opt/mtgo/mtgo.exe
 
-RUN chown -R wine: $HOME && \
-    chmod +x /usr/local/bin/mtgo
-
 USER wine
-CMD $HOME/mtgo
+COPY --from=builder /dist/dotwine $WINEPREFIX
+CMD mtgo
