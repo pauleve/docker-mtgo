@@ -51,8 +51,7 @@ RUN apt-get update && \
         /usr/src/wine-${WINE_DIST}_2.2.0~stretch_i386.deb \
         /usr/src/winehq-${WINE_DIST}_2.2.0~stretch_i386.deb && \
 	apt clean -y && \
-	rm -rf /var/lib/apt/lists/* && \
-    rm /usr/src/*
+	rm -rf /var/lib/apt/lists/*
 
 RUN	curl -L -o /usr/local/bin/winetricks \
         https://raw.githubusercontent.com/Winetricks/winetricks/master/src/winetricks && \
