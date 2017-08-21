@@ -61,6 +61,6 @@ RUN	curl -L -o /usr/local/bin/winetricks \
 ENV WINE_USER wine
 ENV WINE_UID 1000
 ENV WINEPREFIX /home/wine/.wine
-WORKDIR /home/wine
 RUN useradd -u $WINE_UID -d /home/wine -m -s /bin/bash $WINE_USER
+WORKDIR /home/wine
 
