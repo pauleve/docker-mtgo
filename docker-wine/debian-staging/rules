@@ -10,9 +10,6 @@ export CC = $(shell for _cc in gcc-4.5 gcc-4.7 gcc-4.9 gcc false; do \
 
 override_dh_auto_configure:
 
-	# Apply our patches, reconfigure, and update the wineserver protocol request data
-	"$(CURDIR)/patches/patchinstall.sh" DESTDIR="$(CURDIR)" --all
-
 	# Run configure
 ifeq ($(DEB_BUILD_ARCH), amd64)
 	./configure --prefix=/opt/wine-staging \
