@@ -17,7 +17,7 @@ ENV WINE_DIST staging
 COPY debian-${WINE_DIST} /usr/src/wine-$WINE_GIT/debian
 RUN mk-build-deps -i -r -t "apt-get -y --no-install-recommends" debian/control
 
-ENV WINE_STAGING ea6cb581031dd8c78437708ecf7a08a93a27d534
+ENV WINE_STAGING b6bab9758ec27c34f8d66d8554706468f11f65ab
 RUN if [ ${WINE_DIST} = staging ]; then \
     curl -L https://github.com/wine-compholio/wine-staging/archive/$WINE_STAGING.tar.gz \
     | tar xvz --strip-components 1; fi
@@ -27,8 +27,6 @@ RUN if [ ${WINE_DIST} = staging ]; then \
         -W windowscodecs-Palette_Images \
         -W windowscodecs-32bppPRGBA \
         -W windowscodecs-TIFF_Support \
-        -W windowscodecs-IWICPalette_InitializeFromBitmap \
-        -W gdiplus-Grayscale_PNG \
     ; fi
 
 RUN debuild --no-lintian -us -uc -b -j7
