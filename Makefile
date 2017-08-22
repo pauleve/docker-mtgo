@@ -1,22 +1,29 @@
 
-staging:
-	docker build -t mtgo:staging .
+TIMESTAMP=$(shell date +%F)
+BASE=mtgo:base
 
-prepare-staging:
-	./run-mtgo --name mtgo_staging mtgo:staging
+base:
+	docker build -t mtgo:base -t panard/base-$(TIMESTAMP) .
 
-commit-staging:
-	docker commit mtgo_staging mtgo:test
+run-base:
+	./run-mtgo --name mtgo_base $(BASE)
+
+commit-base:
+	docker commit mtgo_base mtgo:test
+
+validate-base:
+	docker tag $(BASE) panard/mtgo:base
+
+push-base:
+	docker push panard/mtgo:base
+	docker push panard/mtgo:base-$(TIMESTAMP)
 
 validate-test:
 	docker tag mtgo:test panard/mtgo:latest
-	docker tag mtgo:test panard/mtgo:$(shell date +%F)
-	docker tag mtgo:staging panard/mtgo:staging
-	docker tag mtgo:staging panard/mtgo:staging-$(shell date +%F)
 
-push:
-	docker push panard/mtgo:staging
-	docker push panard/mtgo:staging-$(shell date +%F)
+push-latest:
 	docker push panard/mtgo:latest
-	docker push panard/mtgo:$(shell date +%F)
+
+validate-all: validate-base validate-test
+push-all: push-base push-latest
 
