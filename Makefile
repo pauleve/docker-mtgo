@@ -3,7 +3,7 @@ TIMESTAMP=$(shell date +%F)
 BASE=mtgo:base
 
 base:
-	docker build -t mtgo:base -t panard/base-$(TIMESTAMP) .
+	docker build -t mtgo:base -t panard/mtgo:base-$(TIMESTAMP) .
 
 run-base:
 	./run-mtgo --name mtgo_base $(BASE)
