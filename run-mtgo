@@ -67,7 +67,10 @@ opts="${opts} -v /tmp/.X11-unix:/tmp/.X11-unix:rw"
 opts="${opts} -v $HOME/.Xauthority:/home/wine/.Xauthority:ro"
 opts="${opts} --net=host --ipc=host"
 
-opts="${opts} -v /etc/timezone:/etc/timezone:ro -v /etc/localtime:/etc/localtime:ro"
+# TODO: make this more generic
+if [ -f /etc/localtime ] && [ -f /etc/timezone ]; then
+    opts="${opts} -v /etc/timezone:/etc/timezone:ro -v /etc/localtime:/etc/localtime:ro"
+fi
 
 if [ -n "${name}" ]; then
     opts="${opts} --name ${name}"
