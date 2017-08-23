@@ -18,13 +18,17 @@ Options:
     --shell             start an interactive shell instead of MTGO
     --winecfg           run winecfg before calling MTGO
     --dry-run           simply print the docker run command
+    --no-tz             disable timezone detection
     -e                  docker run option (environment)
     -v                  docker run option (mount volume)
     -u                  docker run option (change user)
 "
 }
 
-args="$(getopt -n "${0}" -o hv:u:e: --longoptions dry-run,help,winecfg,shell,cmd:,name: -- "${0}" "${@}")"
+lopts="dry-run,help,winecfg,shell,cmd:,name:"
+lopts="${lopts},no-tz"
+
+args="$(getopt -n "${0}" -o hv:u:e: --longoptions $lopts -- "${0}" "${@}")"
 if [ $? -ne 0 ]; then
     usage
     exit 1
@@ -32,6 +36,20 @@ fi
 eval set -- $args
 
 do_run=true
+
+tzopts=""
+# make this more generic (ArchLinux, Mac OS X), see issue #5
+if [ -f /etc/localtime ]; then
+    tzopts="-v /etc/localtime:/etc/localtime:ro"
+    if [ -f /etc/timezone ]; then
+        tzopts="${tzopts} -v /etc/timezone:/etc/timezone:ro"
+    else
+        TZ="$(timedatectl | grep "Time zone"|cut -d: -f2|cut -d' ' -f 2)"
+        if [ -n ${TZ:-} ] && [[ "${TZ}" != "n/a" ]]; then
+            tzopts="-e TZ=${TZ}"
+        fi
+    fi
+fi
 
 while [ -n "${1:-}" ]; do
 case "${1:-}" in
@@ -44,6 +62,8 @@ case "${1:-}" in
         cmd="bash" ;;
     --cmd) shift;
         cmd="$1" ;;
+    --no-tz)
+        tzopts="" ;;
      --name) shift;
         name="$1" ;;
      -e|-v|-u)
@@ -66,11 +86,7 @@ run() {
 opts="${opts} -v /tmp/.X11-unix:/tmp/.X11-unix:rw"
 opts="${opts} -v $HOME/.Xauthority:/home/wine/.Xauthority:ro"
 opts="${opts} --net=host --ipc=host"
-
-# TODO: make this more generic
-if [ -f /etc/localtime ] && [ -f /etc/timezone ]; then
-    opts="${opts} -v /etc/timezone:/etc/timezone:ro -v /etc/localtime:/etc/localtime:ro"
-fi
+opts="${opts} ${tzopts}"
 
 if [ -n "${name}" ]; then
     opts="${opts} --name ${name}"
