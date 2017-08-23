@@ -13,8 +13,8 @@ Usage: $0 [opts] [image]
 
 Options:
     -h, --help          display this message and exit
-    --cmd               initial command (default: $cmd)
-    --name              container name (default: $name)
+    --cmd CMD           initial command (default: $cmd)
+    --name NAME         container name (default: $name)
     --shell             start an interactive shell instead of MTGO
     --winecfg           run winecfg before calling MTGO
     --dry-run           simply print the docker run command
@@ -37,17 +37,13 @@ eval set -- $args
 
 do_run=true
 
-tzopts=""
-# make this more generic (ArchLinux, Mac OS X), see issue #5
-if [ -f /etc/localtime ]; then
-    tzopts="-v /etc/localtime:/etc/localtime:ro"
-    if [ -f /etc/timezone ]; then
-        tzopts="${tzopts} -v /etc/timezone:/etc/timezone:ro"
-    else
-        TZ="$(timedatectl | grep "Time zone"|cut -d: -f2|cut -d' ' -f 2)"
-        if [ -n ${TZ:-} ] && [[ "${TZ}" != "n/a" ]]; then
-            tzopts="-e TZ=${TZ}"
-        fi
+mytz=${TZ:-}
+if [ -f /etc/timezone ]; then
+    mytz=$(</etc/timezone)
+else
+    _tz="$(timedatectl | grep "Time zone"|cut -d: -f2|cut -d' ' -f 2)"
+    if [ -n ${_tz} ] && [[ "${_tz}" != "n/a" ]]; then
+        mytz=$_tz
     fi
 fi
 
@@ -63,7 +59,7 @@ case "${1:-}" in
     --cmd) shift;
         cmd="$1" ;;
     --no-tz)
-        tzopts="" ;;
+        mytz="" ;;
      --name) shift;
         name="$1" ;;
      -e|-v|-u)
@@ -86,7 +82,9 @@ run() {
 opts="${opts} -v /tmp/.X11-unix:/tmp/.X11-unix:rw"
 opts="${opts} -v $HOME/.Xauthority:/home/wine/.Xauthority:ro"
 opts="${opts} --net=host --ipc=host"
-opts="${opts} ${tzopts}"
+if [ -n "${mytz}" ]; then
+    opts="${opts} -e TZ=/usr/share/zoneinfo/${mytz}"
+fi
 
 if [ -n "${name}" ]; then
     opts="${opts} --name ${name}"
