@@ -25,7 +25,7 @@ wget -O run-mtgo https://raw.githubusercontent.com/pauleve/docker-mtgo/master/ru
 chmod +x run-mtgo
 ```
 
-If you wan to customize wine (notably the graphics), you can use
+If you want to customize wine (notably the graphics), you can use
 ```
 ./run-mtgo --winecfg
 ```
