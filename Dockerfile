@@ -21,3 +21,9 @@ RUN mkdir -p /opt/mtgo \
 
 USER wine
 ENV WINEDEBUG -all
+
+# hack to allow mounting of user.reg and system.reg from host
+# see https://github.com/pauleve/docker-mtgo/issues/6
+RUN cd .wine && mkdir host \
+    && mv user.reg system.reg host/ \
+    && ln -s host/*.reg .

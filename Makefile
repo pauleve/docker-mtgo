@@ -1,29 +1,16 @@
 
 TIMESTAMP=$(shell date +%F)
-BASE=mtgo:base
 
-base:
-	docker build -t mtgo:base -t panard/mtgo:base-$(TIMESTAMP) .
+BASE=panard/mtgo:$(TIMESTAMP)
 
-run-base:
-	./run-mtgo --name mtgo_base $(BASE)
+image:
+	docker build -t $(BASE) .
 
-commit-base:
-	docker commit mtgo_base mtgo:test
+validate:
+	docker tag $(BASE) panard/mtgo:latest
 
-validate-base:
-	docker tag $(BASE) panard/mtgo:base
-
-push-base:
-	docker push panard/mtgo:base
-	docker push panard/mtgo:base-$(TIMESTAMP)
-
-validate-test:
-	docker tag mtgo:test panard/mtgo:latest
-
-push-latest:
+push:
+	docker push $(BASE)
 	docker push panard/mtgo:latest
 
-validate-all: validate-base validate-test
-push-all: push-base push-latest
 

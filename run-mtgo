@@ -6,6 +6,9 @@ image=panard/mtgo:latest
 name=mtgo_running
 cmd=$defaultcmd
 opts=""
+data=""
+
+local_data="$HOME/.local/share/mtgo"
 
 usage() {
     echo "
@@ -14,6 +17,8 @@ Usage: $0 [opts] [image]
 Options:
     -h, --help          display this message and exit
     --cmd CMD           initial command (default: $cmd)
+    --data PATH         path to store data (default: docker volume mtgo-data)
+    --reset             reset local data
     --name NAME         container name (default: $name)
     --shell             start an interactive shell instead of MTGO
     --winecfg           run winecfg before calling MTGO
@@ -26,6 +31,7 @@ Options:
 }
 
 lopts="dry-run,help,winecfg,shell,cmd:,name:"
+lopts="${lopts},data"
 lopts="${lopts},no-tz"
 
 args="$(getopt -n "${0}" -o hv:u:e: --longoptions $lopts -- "${0}" "${@}")"
@@ -52,10 +58,14 @@ fi
 while [ -n "${1:-}" ]; do
 case "${1:-}" in
     --help|-h)  usage && exit 0 ;;
+    --data) shift
+        data="$1" ;;
     --dry-run)
         do_run=false ;;
     --winecfg)
         cmd="${defaultcmd} $1" ;;
+    --reset)
+        rm -rf "${local_data}" ;;
     --shell)
         cmd="bash" ;;
     --cmd) shift;
@@ -80,6 +90,25 @@ run() {
         "${@}"
     fi
 }
+
+if [ -z "${data:-}" ]; then
+    data="mtgo-data"
+    docker volume inspect $data >/dev/null 2>&1
+    if [ $? -ne 0 ]; then
+        echo "Creating docker volume $data"
+        docker volume create $data
+    fi
+fi
+if [ ! -d ${local_data} ]; then
+    set -e
+    mkdir -p ${local_data}
+    cd ${local_data}
+    docker run --rm ${image} tar c /home/wine/.wine/host | tar xv --strip-components 4
+    cd -
+fi
+opts="${opts} -v ${local_data}:/home/wine/.wine/host/"
+opts="${opts} -v ${data}:/home/wine/.wine/drive_c/users/"
+#-v "${data}:/home/wine/.wine/drive_c/windows/Microsoft.NET/Framework/v4.0.30319/Wizards of the Coast, LLC/" \
 
 opts="${opts} -v /tmp/.X11-unix:/tmp/.X11-unix:rw"
 opts="${opts} -v $HOME/.Xauthority:/home/wine/.Xauthority:ro"
