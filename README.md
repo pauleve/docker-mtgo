@@ -18,8 +18,6 @@ Run the docker image using [run-mtgo](./run-mtgo?raw=true) helper script
 ```
 ./run-mtgo
 ```
-Once you exited MTGO, press Enter to shut down the container.
-
 
 The script `run-mtgo` can be installed and upgraded as follows:
 ```
