@@ -38,12 +38,14 @@ eval set -- $args
 do_run=true
 
 mytz=${TZ:-}
-if [ -f /etc/timezone ]; then
-    mytz=$(</etc/timezone)
-else
-    _tz="$(timedatectl | grep "Time zone"|cut -d: -f2|cut -d' ' -f 2)"
-    if [ -n ${_tz} ] && [[ "${_tz}" != "n/a" ]]; then
-        mytz=$_tz
+if [ -z "${mytz}" ]; then
+    if [ -f /etc/timezone ]; then
+        mytz=$(</etc/timezone)
+    else
+        _tz="$(timedatectl | grep "Time zone"|cut -d: -f2|cut -d' ' -f 2)"
+        if [ -n ${_tz} ] && [[ "${_tz}" != "n/a" ]]; then
+            mytz=$_tz
+        fi
     fi
 fi
 
