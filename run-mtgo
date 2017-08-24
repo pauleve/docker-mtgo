@@ -31,7 +31,7 @@ Options:
 }
 
 lopts="dry-run,help,winecfg,shell,cmd:,name:"
-lopts="${lopts},data"
+lopts="${lopts},data,reset"
 lopts="${lopts},no-tz"
 
 args="$(getopt -n "${0}" -o hv:u:e: --longoptions $lopts -- "${0}" "${@}")"
