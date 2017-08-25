@@ -9,53 +9,39 @@ See https://appdb.winehq.org/objectManager.php?sClass=version&iId=32007 for more
 
 ## Usage
 
-### Get latest tested image
-
+Pull latest docker image:
 ```
 docker pull panard/mtgo
 ```
 
-### Run MTGO
-
+Run the docker image using [run-mtgo](./run-mtgo?raw=true) helper script
 ```
 ./run-mtgo
 ```
 
-Once you finished played, press Enter to shut down the container.
+The script `run-mtgo` can be installed and upgraded as follows:
+```
+wget -O run-mtgo https://raw.githubusercontent.com/pauleve/docker-mtgo/master/run-mtgo
+chmod +x run-mtgo
+```
 
-### Advanced usage
-
-The image `panard/mtgo:latest` comes with a pre-installed MTGO, but before license acceptance.
-Moreover, any setting will be lost at container shut down.
-
-If you want to customize wine and remember your play settings, run first following command:
+If you want to customize wine (notably the graphics), you can use
 ```
 ./run-mtgo --winecfg
 ```
-First, winecfg will open, which allows you to configure graphics for instance.
 
-Then MTGO will launch. Enter your login, adjust your settings, disconnect MTGO, and _before_ pressing Enter to shut down the container, open a new terminal and type the following command:
-
+See
 ```
-docker commit mtgo_running mtgo:me
+./run-mtgo --help
 ```
-It will create a new docker image on top of `panard/mtgo` with your additional settings.
-
-Then, you can start your image as follows:
-
-```
-./run-mtgo mtgo:me
-```
-
-(if you change your settings again, or MTGO has been upgraded, you can save the changes with the same `docker commit` command).
+for other options.
 
 
-## Building
+## Docker image building
 
-To build the `mtgo:staging` image:
 ```
 make -C docker-wine
-make staging
+make
 ```
 
 

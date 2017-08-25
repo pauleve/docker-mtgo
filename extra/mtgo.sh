@@ -11,6 +11,18 @@ done
 
 $do_winecfg && (winecfg ; wineserver -kw)
 wine /opt/mtgo/mtgo.exe
-echo "MTGO will start shortly. Press Enter when you have exited it."
-read
-wineserver -kw
+started=0
+s=1
+while :; do
+    sleep $s
+    pidof MTGO.exe >/dev/null
+    r=$?
+    if [ $started -eq 0 ] && [ $r -eq 0 ]; then
+        echo "====== MTGO.exe has started."
+        started=1
+        s=3
+    elif [ $started -eq 1 ] && [ $r -eq 1 ]; then
+        echo "====== shuting down"
+        exit
+    fi
+done
