@@ -101,8 +101,10 @@ if [ -z "${data:-}" ]; then
         docker volume create $data
     fi
 fi
+
+set -e
+
 if [ ! -d ${local_data} ]; then
-    set -e
     mkdir -p ${local_data}
     cd ${local_data}
     docker run --rm ${image} tar c /home/wine/.wine/host | tar xv --strip-components 4
@@ -113,7 +115,17 @@ opts="${opts} -v ${data}:/home/wine/.wine/drive_c/users/"
 #-v "${data}:/home/wine/.wine/drive_c/windows/Microsoft.NET/Framework/v4.0.30319/Wizards of the Coast, LLC/" \
 
 opts="${opts} -v /tmp/.X11-unix:/tmp/.X11-unix:rw"
-opts="${opts} -v $HOME/.Xauthority:/home/wine/.Xauthority:ro"
+if [[ ${OSTYPE} == darwin* ]]; then
+    ip=127.0.0.1
+    run open -a XQuartz
+    run xhost + ${ip}
+    run socat TCP4-LISTEN:6000,bind=$ip,range=$ip/32,reuseaddr,fork UNIX-CLIENT:"$DISPLAY" &
+    socat_pid=$!
+    export DISPLAY=$ip:0
+else
+    opts="${opts} -v $HOME/.Xauthority:/home/wine/.Xauthority:ro"
+fi
+
 opts="${opts} --net=host --ipc=host"
 if [ -n "${mytz}" ]; then
     opts="${opts} -e TZ=/usr/share/zoneinfo/${mytz}"
@@ -129,3 +141,6 @@ fi
 run docker run --privileged --rm -e DISPLAY \
     ${opts} ${image} ${cmd}
 
+if [[ ${OSTYPE} == darwin* ]]; then
+    kill ${socat_pid}
+fi
