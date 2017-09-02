@@ -23,6 +23,7 @@ while :; do
         s=3
     elif [ $started -eq 1 ] && [ $r -eq 1 ]; then
         echo "====== shuting down"
+        wineserver -kw
         exit
     fi
 done
