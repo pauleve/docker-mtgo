@@ -44,15 +44,9 @@ eval set -- $args
 do_run=true
 
 mytz=${TZ:-}
+detect_tz=false
 if [ -z "${mytz}" ]; then
-    if [ -f /etc/timezone ]; then
-        mytz=$(</etc/timezone)
-    else
-        _tz="$(timedatectl | grep "Time zone"|cut -d: -f2|cut -d' ' -f 2)"
-        if [ -n ${_tz} ] && [[ "${_tz}" != "n/a" ]]; then
-            mytz=$_tz
-        fi
-    fi
+    detect_tz=true
 fi
 
 while [ -n "${1:-}" ]; do
@@ -73,6 +67,7 @@ case "${1:-}" in
         cmd="$1"
         opts="${opts} -it" ;;
     --no-tz)
+        detect_tz=false
         mytz="" ;;
      --name) shift;
         name="$1" ;;
@@ -92,6 +87,17 @@ run() {
         "${@}"
     fi
 }
+
+if $detect_tz; then
+    if [ -f /etc/timezonex ]; then
+        mytz=$(</etc/timezone)
+    elif [[ $OSTYPE == linux-gnu ]]; then
+        _tz="$(timedatectl 2>/dev/null|grep "Time zone"|cut -d: -f2|cut -d' ' -f 2)"
+        if [ -n ${_tz} ] && [[ "${_tz}" != "n/a" ]]; then
+            mytz=$_tz
+        fi
+    fi
+fi
 
 if [ -z "${data:-}" ]; then
     data="mtgo-data"
