@@ -133,7 +133,7 @@ if [[ ${OSTYPE} == darwin* ]]; then
     ip=127.0.0.1
     run open -a XQuartz
     run xhost + ${ip}
-    run socat TCP4-LISTEN:6000,bind=$ip,range=$ip/32,reuseaddr,fork UNIX-CLIENT:"$DISPLAY" &
+    run socat TCP4-LISTEN:6000,bind=$ip,range=$ip/32,reuseaddr,fork UNIX-CLIENT:\"$DISPLAY\" &
     socat_pid=$!
     export DISPLAY=$ip:0
 else
