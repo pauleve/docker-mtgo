@@ -34,6 +34,11 @@ lopts="dry-run,help,winecfg,shell,cmd:,name:"
 lopts="${lopts},data,reset"
 lopts="${lopts},no-tz"
 
+brew_getopt="/usr/local/opt/gnu-getopt/bin/getopt"
+if [[ $OSTYPE == darwin* ]] && [ -x $brew_getopt ]; then
+    alias getopt=$brew_getopt
+fi
+
 args="$(getopt -n "${0}" -o hv:u:e: --longoptions $lopts -- "${0}" "${@}")"
 if [ $? -ne 0 ]; then
     usage
