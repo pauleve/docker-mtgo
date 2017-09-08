@@ -94,8 +94,10 @@ run() {
 }
 
 if $detect_tz; then
-    if [ -f /etc/timezonex ]; then
+    if [ -f /etc/timezone ]; then
         mytz=$(</etc/timezone)
+    elif [ -L /etc/localtime ]; then
+        mytz=$(readlink /etc/localtime |cut -d/ -f 5-)
     elif [[ $OSTYPE == linux-gnu ]]; then
         _tz="$(timedatectl 2>/dev/null|grep "Time zone"|cut -d: -f2|cut -d' ' -f 2)"
         if [ -n ${_tz} ] && [[ "${_tz}" != "n/a" ]]; then
