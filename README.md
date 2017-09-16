@@ -9,6 +9,18 @@ It is based on [i386/debian:stretch-slim](https://hub.docker.com/r/i386/debian/)
 
 See https://appdb.winehq.org/objectManager.php?sClass=version&iId=32007 for more information.
 
+### Note for Mac OS X users
+
+Mac OS X support is still under test.
+Using [Homebrew](https://brew.sh/), install XQuartz, socat, and the GNU version of getopt:
+
+```
+brew cask install xquartz 
+brew install socat gnu-getopt 
+```
+Then follow the standard usage.
+Please give us feedback on https://github.com/pauleve/docker-mtgo/issues/3 (being positive or negative, with the full output of the `run-mtgo` script).
+
 ## Usage
 
 Pull latest docker image:
