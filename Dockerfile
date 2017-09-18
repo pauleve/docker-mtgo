@@ -1,4 +1,4 @@
-FROM panard/wine:mtgo-2017-09-18
+FROM panard/wine:mtgo
 MAINTAINER Panard <panard@backzone.net>
 CMD mtgo
 
