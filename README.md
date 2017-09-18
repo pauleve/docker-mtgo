@@ -50,6 +50,18 @@ See
 ```
 for other options.
 
+## Troubleshoot
+
+* `run-mtgo` never exits
+```
+docker kill mtgo_running
+```
+
+* `run-mtgo` asks me to install dotnet
+```
+docker kill mtgo_running # in another terminal
+./run-mtgo --reset
+```
 
 ## Docker image building
 
