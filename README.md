@@ -4,7 +4,7 @@ This image provides a ready-to-play MTGO for Linux.
 
 Join the "WineHQ Players" clan!
 
-It is based on [i386/debian:stretch-slim](https://hub.docker.com/r/i386/debian/) and wine-staging (2.15) with patches by Anton Romanov to better support MTGO:
+It is based on [i386/debian:stretch-slim](https://hub.docker.com/r/i386/debian/) and wine-staging with patches by Anton Romanov to better support MTGO:
 - https://github.com/theli-ua/wine/tree/mtgo
 
 See https://appdb.winehq.org/objectManager.php?sClass=version&iId=32007 for more information.
