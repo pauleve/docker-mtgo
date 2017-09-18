@@ -6,6 +6,9 @@ BASE=panard/mtgo:$(TIMESTAMP)
 image:
 	docker build -t $(BASE) .
 
+test:
+	./run-mtgo $(BASE)
+
 validate:
 	docker tag $(BASE) panard/mtgo:latest
 

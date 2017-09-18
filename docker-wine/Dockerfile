@@ -8,7 +8,7 @@ WORKDIR /usr/src
 RUN apt-get update && \
     apt-get install -y devscripts build-essential
 
-ENV WINE_GIT 92c20d4b55de2bb8017c34c4d29c7410fad2424e
+ENV WINE_GIT be4baf481e781eaa757bd6b766c93f9c19767436
 RUN curl -L https://github.com/theli-ua/wine/archive/${WINE_GIT}.tar.gz \
     | tar xvz
 WORKDIR /usr/src/wine-$WINE_GIT
@@ -17,16 +17,13 @@ ENV WINE_DIST staging
 COPY debian-${WINE_DIST} /usr/src/wine-$WINE_GIT/debian
 RUN mk-build-deps -i -r -t "apt-get -y --no-install-recommends" debian/control
 
-ENV WINE_STAGING b6bab9758ec27c34f8d66d8554706468f11f65ab
+ENV WINE_STAGING 7b016ffde839c21863e3e9eada1db19657d9dc0d
 RUN if [ ${WINE_DIST} = staging ]; then \
     curl -L https://github.com/wine-compholio/wine-staging/archive/$WINE_STAGING.tar.gz \
     | tar xvz --strip-components 1; fi
 RUN if [ ${WINE_DIST} = staging ]; then \
 	./patches/patchinstall.sh DESTDIR="$PWD" --all \
-        -W windowscodecs-GIF_Encoder \
-        -W windowscodecs-Palette_Images \
-        -W windowscodecs-32bppPRGBA \
-        -W windowscodecs-TIFF_Support \
+        -W secur32-Zero_Buffer_Length \
     ; fi
 
 RUN debuild --no-lintian -us -uc -b -j7
