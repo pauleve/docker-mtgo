@@ -8,7 +8,8 @@ WORKDIR /usr/src
 RUN apt-get update && \
     apt-get install -y devscripts build-essential
 
-ENV WINE_GIT be4baf481e781eaa757bd6b766c93f9c19767436
+# wine 2.17 + custom patches
+ENV WINE_GIT df836c6d6f449836e969fe5ed2fd69ba3381c55e
 RUN curl -L https://github.com/theli-ua/wine/archive/${WINE_GIT}.tar.gz \
     | tar xvz
 WORKDIR /usr/src/wine-$WINE_GIT
@@ -17,7 +18,7 @@ ENV WINE_DIST staging
 COPY debian-${WINE_DIST} /usr/src/wine-$WINE_GIT/debian
 RUN mk-build-deps -i -r -t "apt-get -y --no-install-recommends" debian/control
 
-ENV WINE_STAGING 7b016ffde839c21863e3e9eada1db19657d9dc0d
+ENV WINE_STAGING 54b732863c93de0f80776bfc41279e39bb9c9240
 RUN if [ ${WINE_DIST} = staging ]; then \
     curl -L https://github.com/wine-compholio/wine-staging/archive/$WINE_STAGING.tar.gz \
     | tar xvz --strip-components 1; fi
