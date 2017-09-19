@@ -1,6 +1,7 @@
 # MTGO docker image
 
-This image provides a ready-to-play MTGO for Linux.
+This image provides a ready-to-play Magic The Gathering Online (MTGO) for Linux
+and Mac OS X.
 
 Join the "WineHQ Players" clan!
 
