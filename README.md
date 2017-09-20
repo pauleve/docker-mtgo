@@ -53,16 +53,18 @@ for other options.
 
 ## Troubleshoot
 
-* `run-mtgo` never exits
+* `run-mtgo` asks me to install dotnet.
+
+First, exits with <kbd>CTRL</kbd>+<kbd>C</kbd>
+```
+./run-mtgo --reset
+```
+
+* `run-mtgo` never exits, even after <kbd>CTRL</kbd>+<kbd>C</kbd>
 ```
 docker kill mtgo_running
 ```
 
-* `run-mtgo` asks me to install dotnet
-```
-docker kill mtgo_running # in another terminal
-./run-mtgo --reset
-```
 
 ## Docker image building
 

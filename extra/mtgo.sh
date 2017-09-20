@@ -9,7 +9,9 @@ while [ -n "${1:-}" ]; do
    shift
 done
 
-$do_winecfg && (winecfg ; wineserver -kw)
+trap "exit" INT
+
+$do_winecfg && (winecfg ; wineserver -kw; sleep 1)
 wine /opt/mtgo/mtgo.exe
 started=0
 s=1
