@@ -7,6 +7,7 @@ name=mtgo_running
 cmd=$defaultcmd
 opts=""
 data=""
+data_is_volume=false
 
 local_data="$HOME/.local/share/mtgo"
 
@@ -18,12 +19,14 @@ Options:
     -h, --help          display this message and exit
     --cmd CMD           initial command (default: $cmd)
     --data PATH         path to store data (default: docker volume mtgo-data)
-    --reset             reset local data
+    --data-volume VOL   docker volume to store data (default: mtgo-data)
+    --reset             reset local data and docker volume
     --name NAME         container name (default: $name)
     --shell             start an interactive shell instead of MTGO
     --winecfg           run winecfg before calling MTGO
     --dry-run           simply print the docker run command
     --no-tz             disable timezone detection
+    --test              test environment
     -e                  docker run option (environment)
     -v                  docker run option (mount volume)
     -u                  docker run option (change user)
@@ -31,7 +34,8 @@ Options:
 }
 
 lopts="dry-run,help,winecfg,shell,cmd:,name:"
-lopts="${lopts},data,reset"
+lopts="${lopts},data:,data-volume:,reset"
+lopts="${lopts},test"
 lopts="${lopts},no-tz"
 
 getopt=getopt
@@ -48,6 +52,8 @@ fi
 eval set -- $args
 
 do_run=true
+do_reset=false
+do_test=false
 
 mytz=${TZ:-}
 detect_tz=false
@@ -59,16 +65,23 @@ while [ -n "${1:-}" ]; do
 case "${1:-}" in
     --help|-h)  usage && exit 0 ;;
     --data) shift
+        data_is_volume=false
+        data="$1" ;;
+    --data-volume) shift
+        data_is_volume=true
         data="$1" ;;
     --dry-run)
         do_run=false ;;
     --winecfg)
         cmd="${defaultcmd} $1" ;;
     --reset)
-        rm -rf "${local_data}" ;;
+        do_reset=true ;;
     --shell)
         cmd="bash"
         opts="${opts} -it" ;;
+    --test)
+        local_data="$HOME/.local/share/mtgo-test"
+        do_test=true ;;
     --cmd) shift;
         cmd="$1"
         opts="${opts} -it" ;;
@@ -108,11 +121,30 @@ if $detect_tz; then
 fi
 
 if [ -z "${data:-}" ]; then
-    data="mtgo-data"
+    if $do_test; then
+        data="mtgo-data-test"
+    else
+        data="mtgo-data"
+    fi
+    data_is_volume=true
+fi
+if $do_reset; then
+    msg="You are about to delete ${local_data}"
+    if $data_is_volume; then
+        msg="${msg} and wipe docker volume ${data}"
+    fi
+    echo "WARNING: $msg"
+    echo "Press Enter to continue, CTRL+C to abort"
+    read
+    rm -vrf "${local_data}"
+    if $data_is_volume; then
+        run docker volume rm $data
+    fi
+fi
+if $data_is_volume; then
     docker volume inspect $data >/dev/null 2>&1
     if [ $? -ne 0 ]; then
-        echo "Creating docker volume $data"
-        docker volume create $data
+        run docker volume create $data
     fi
 fi
 
