@@ -51,16 +51,16 @@ See
 ```
 for other options.
 
-## Troubleshoot
+## Troubleshooting
 
-* `run-mtgo` asks me to install dotnet.
+* `run-mtgo` asks me to install .NET:
 
-First, exits with <kbd>CTRL</kbd>+<kbd>C</kbd>
+First, exit with <kbd>CTRL</kbd>+<kbd>C</kbd>, then
 ```
 ./run-mtgo --reset
 ```
 
-* `run-mtgo` never exits, even after <kbd>CTRL</kbd>+<kbd>C</kbd>
+* `run-mtgo` never exits, even after <kbd>CTRL</kbd>+<kbd>C</kbd>:
 ```
 docker kill mtgo_running
 ```
