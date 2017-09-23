@@ -160,7 +160,6 @@ opts="${opts} -v ${local_data}:/home/wine/.wine/host/"
 opts="${opts} -v ${data}:/home/wine/.wine/drive_c/users/"
 #-v "${data}:/home/wine/.wine/drive_c/windows/Microsoft.NET/Framework/v4.0.30319/Wizards of the Coast, LLC/" \
 
-opts="${opts} -v /tmp/.X11-unix:/tmp/.X11-unix:rw"
 if [[ ${OSTYPE} == darwin* ]]; then
     iface=en0
     ip=$(ifconfig $iface | grep inet | awk '$1=="inet" {print $2}')
@@ -170,6 +169,7 @@ if [[ ${OSTYPE} == darwin* ]]; then
     socat_pid=$!
     export DISPLAY=$ip:0
 else
+    opts="${opts} -v /tmp/.X11-unix:/tmp/.X11-unix:rw"
     opts="${opts} -v $HOME/.Xauthority:/home/wine/.Xauthority:ro"
 fi
 
