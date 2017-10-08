@@ -5,8 +5,7 @@ and Mac OS X.
 
 Join the "WineHQ Players" clan!
 
-It is based on [i386/debian:stretch-slim](https://hub.docker.com/r/i386/debian/) and wine-staging with patches by Anton Romanov to better support MTGO:
-- https://github.com/theli-ua/wine/tree/mtgo
+It is based on [i386/debian:stretch-slim](https://hub.docker.com/r/i386/debian/) and wine-staging 2.18 vanilla.
 
 See https://appdb.winehq.org/objectManager.php?sClass=version&iId=32007 for more information.
 
@@ -55,12 +54,12 @@ for other options.
 
 * `run-mtgo` asks me to install .NET:
 
-First, exit with <kbd>CTRL</kbd>+<kbd>C</kbd>, then
+First, exit with <kbd>Ctrl</kbd>+<kbd>C</kbd>, then
 ```
 ./run-mtgo --reset
 ```
 
-* `run-mtgo` never exits, even after <kbd>CTRL</kbd>+<kbd>C</kbd>:
+* `run-mtgo` never exits, even after <kbd>Ctrl</kbd>+<kbd>C</kbd>:
 ```
 docker kill mtgo_running
 ```
@@ -69,7 +68,6 @@ docker kill mtgo_running
 ## Docker image building
 
 ```
-make -C docker-wine
 make
 ```
 
