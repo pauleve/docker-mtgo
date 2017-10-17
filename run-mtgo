@@ -164,8 +164,8 @@ if [[ ${OSTYPE} == darwin* ]]; then
     iface=en0
     ip=$(ifconfig $iface | grep inet | awk '$1=="inet" {print $2}')
     run open -a XQuartz
-    #run xhost + ${ip}
-    run socat TCP4-LISTEN:6000,bind=$ip,range=$ip/32,reuseaddr,fork UNIX-CLIENT:\"$DISPLAY\" &
+    echo "socat on $ip forwarding to $DISPLAY"
+    socat TCP4-LISTEN:6000,bind=$ip,range=$ip/32,reuseaddr,fork UNIX-CLIENT:\"$DISPLAY\" &
     socat_pid=$!
     export DISPLAY=$ip:0
 else
