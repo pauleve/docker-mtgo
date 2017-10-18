@@ -168,6 +168,7 @@ if [[ ${OSTYPE} == darwin* ]]; then
     socat TCP4-LISTEN:6000,bind=$ip,range=$ip/32,reuseaddr,fork UNIX-CLIENT:\"$DISPLAY\" &
     socat_pid=$!
     export DISPLAY=$ip:0
+    opts="${opts} -e WINE_X11_NO_MITSHM=1"
 else
     opts="${opts} -v /tmp/.X11-unix:/tmp/.X11-unix:rw"
     opts="${opts} -v $HOME/.Xauthority:/home/wine/.Xauthority:ro"
