@@ -167,6 +167,7 @@ if [[ ${OSTYPE} == darwin* ]]; then
     echo "socat on $ip forwarding to $DISPLAY"
     socat TCP4-LISTEN:6000,bind=$ip,range=$ip/32,reuseaddr,fork UNIX-CLIENT:\"$DISPLAY\" &
     socat_pid=$!
+    sleep 2
     export DISPLAY=$ip:0
     opts="${opts} -e WINE_X11_NO_MITSHM=1"
 else
