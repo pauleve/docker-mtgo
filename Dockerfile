@@ -1,4 +1,4 @@
-FROM i386/debian:stretch-slim
+FROM panard/wine:custom
 MAINTAINER Panard <panard@backzone.net>
 CMD mtgo
 
@@ -13,25 +13,11 @@ ADD https://raw.githubusercontent.com/Winetricks/winetricks/master/src/winetrick
 RUN chmod 755 /usr/local/bin/winetricks
 
 ENV DEBIAN_FRONTEND noninteractive
-RUN	apt-get update \
+RUN apt-get update \
     && apt-get install -y --no-install-recommends \
         ca-certificates \
         curl \
-        gnupg \
-    && echo "deb http://dl.winehq.org/wine-builds/debian/ stretch main" \
-        > /etc/apt/sources.list.d/winehq.list \
-    && curl -LO https://dl.winehq.org/wine-builds/Release.key \
-    && apt-key add Release.key \
-    && apt-get update \
-    && apt-get install -y --no-install-recommends \
         cabextract \
-        winehq-staging \
-    && apt remove -y --purge gnupg \
-    && apt autoremove -y --purge \
-    && apt clean -y && rm -rf /var/lib/apt/lists/*
-
-RUN apt-get update \
-    && apt-get install -y --no-install-recommends \
         xauth \
         xvfb \
     && su - $WINE_USER -c winecfg \
@@ -43,9 +29,9 @@ RUN apt-get update \
 
 ENV WINEDEBUG -all
 
-ADD --chown=wine:wine http://mtgoclientdepot.onlinegaming.wizards.com/setup.exe /opt/mtgo/mtgo.exe
-
 COPY extra/mtgo.sh /usr/local/bin/mtgo
+
+ADD --chown=wine:wine http://mtgoclientdepot.onlinegaming.wizards.com/setup.exe /opt/mtgo/mtgo.exe
 
 USER wine
 

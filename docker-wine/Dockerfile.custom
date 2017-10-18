@@ -3,30 +3,30 @@ MAINTAINER Panard <panard@inzenet.org>
 
 ENV DEBIAN_FRONTEND noninteractive
 
-WORKDIR /usr/src
+WORKDIR /usr/src/wine
 
 RUN apt-get update && \
     apt-get install -y devscripts build-essential
 
-# wine 2.17 + custom patches
-ENV WINE_GIT df836c6d6f449836e969fe5ed2fd69ba3381c55e
-RUN curl -L https://github.com/theli-ua/wine/archive/${WINE_GIT}.tar.gz \
-    | tar xvz
-WORKDIR /usr/src/wine-$WINE_GIT
-
-ENV WINE_DIST staging
-COPY debian-${WINE_DIST} /usr/src/wine-$WINE_GIT/debian
+ARG WINE_DIST=staging
+COPY debian-${WINE_DIST} /usr/src/wine/debian
 RUN mk-build-deps -i -r -t "apt-get -y --no-install-recommends" debian/control
 
-ENV WINE_STAGING 54b732863c93de0f80776bfc41279e39bb9c9240
+ARG WINE_GIT=2.18
+RUN curl -L https://github.com/wine-mirror/wine/archive/wine-$WINE_GIT.tar.gz \
+    | tar xz --strip-components 1
+
+ARG WINE_STAGING=v$WINE_GIT
 RUN if [ ${WINE_DIST} = staging ]; then \
     curl -L https://github.com/wine-compholio/wine-staging/archive/$WINE_STAGING.tar.gz \
-    | tar xvz --strip-components 1; fi
+    | tar xz --strip-components 1; fi
 RUN if [ ${WINE_DIST} = staging ]; then \
-	./patches/patchinstall.sh DESTDIR="$PWD" --all \
-        -W secur32-Zero_Buffer_Length \
+    ./patches/patchinstall.sh DESTDIR="$PWD" --all \
     ; fi
+#        -W secur32-Zero_Buffer_Length \
 
+COPY wine-WINE_X11_NO_MITSHM.patch /usr/src/wine
+RUN patch -p1 < wine-WINE_X11_NO_MITSHM.patch
 RUN debuild --no-lintian -us -uc -b -j7
 RUN rm -v /usr/src/wine-$WINE_DIST-d*
 
@@ -40,22 +40,9 @@ COPY --from=builder /usr/src/*.deb /usr/src/
 ENV WINE_DIST staging
 RUN apt-get update && \
     apt install -y --no-install-recommends \
-        ca-certificates \
-        cabextract \
-        curl \
         /usr/src/wine-${WINE_DIST}-i386_2.2.0~stretch_i386.deb \
         /usr/src/wine-${WINE_DIST}_2.2.0~stretch_i386.deb \
         /usr/src/winehq-${WINE_DIST}_2.2.0~stretch_i386.deb && \
-	apt clean -y && \
-	rm -rf /var/lib/apt/lists/*
-
-RUN	curl -L -o /usr/local/bin/winetricks \
-        https://raw.githubusercontent.com/Winetricks/winetricks/master/src/winetricks && \
-    chmod +x /usr/local/bin/winetricks
-
-ENV WINE_USER wine
-ENV WINE_UID 1000
-ENV WINEPREFIX /home/wine/.wine
-RUN useradd -u $WINE_UID -d /home/wine -m -s /bin/bash $WINE_USER
-WORKDIR /home/wine
+    apt clean -y && \
+    rm -rf /var/lib/apt/lists/*
 

@@ -4,7 +4,7 @@ TIMESTAMP=$(shell date +%F)
 BASE=panard/mtgo:$(TIMESTAMP)
 
 image:
-	docker pull i386/debian:stretch-slim
+	make -C docker-wine $(shell grep FROM Dockerfile|cut -d: -f2)
 	docker build -t $(BASE) .
 
 test:

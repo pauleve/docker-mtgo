@@ -1,0 +1,33 @@
+diff -ur a/dlls/winex11.drv/bitblt.c b/dlls/winex11.drv/bitblt.c
+--- a/dlls/winex11.drv/bitblt.c	2017-10-16 21:00:14.000000000 +0200
++++ b/dlls/winex11.drv/bitblt.c	2017-10-17 12:11:03.779891579 +0200
+@@ -1767,6 +1767,19 @@
+ }
+ 
+ #ifdef HAVE_LIBXXSHM
++
++
++static inline BOOL DISABLED_XSHM( void )
++{
++    static int xshm_disabled = -1;
++    if (xshm_disabled == -1)
++    {
++        const char *str = getenv( "WINE_X11_NO_MITSHM" );
++        xshm_disabled = str && (atoi(str) != 0);
++    }
++    return xshm_disabled;
++}
++
+ static int xshm_error_handler( Display *display, XErrorEvent *event, void *arg )
+ {
+     return 1;  /* FIXME: should check event contents */
+@@ -1777,6 +1790,9 @@
+     XImage *image;
+ 
+     shminfo->shmid = -1;
++
++    if (DISABLED_XSHM()) return NULL;
++
+     image = XShmCreateImage( gdi_display, vis->visual, vis->depth, ZPixmap, NULL, shminfo, width, height );
+     if (!image) return NULL;
+     if (image->bytes_per_line & 3) goto failed;  /* we need 32-bit alignment */
