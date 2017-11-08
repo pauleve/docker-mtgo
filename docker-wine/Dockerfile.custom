@@ -12,7 +12,7 @@ ARG WINE_DIST=staging
 COPY debian-${WINE_DIST} /usr/src/wine/debian
 RUN mk-build-deps -i -r -t "apt-get -y --no-install-recommends" debian/control
 
-ARG WINE_GIT=2.19
+ARG WINE_GIT=2.20
 RUN curl -L https://github.com/wine-mirror/wine/archive/wine-$WINE_GIT.tar.gz \
     | tar xz --strip-components 1
 
