@@ -1,0 +1,23 @@
+diff --git a/dlls/ole32/compobj.c b/dlls/ole32/compobj.c
+index 6fb07bf2ba..7efb552010 100644
+--- a/dlls/ole32/compobj.c
++++ b/dlls/ole32/compobj.c
+@@ -4541,6 +4541,18 @@ HRESULT WINAPI CoWaitForMultipleHandles(DWORD dwFlags, DWORD dwTimeout,
+                          * from the 16-bit world. */
+                         break;
+                     }
++                } else if (PeekMessageW(&msg, apt->win, 0, 0, 0)) {
++                    ERR("received message whilst waiting for RPC: 0x%04x\n", msg.message);
++                    TranslateMessage(&msg);
++                    DispatchMessageW(&msg);
++                    if (msg.message == WM_QUIT)
++                    {
++                        TRACE("resending WM_QUIT to outer message loop\n");
++                        PostQuitMessage(msg.wParam);
++                        /* no longer need to process messages */
++                        message_loop = FALSE;
++                        break;
++                    }
+                 }
+ 
+                 /* some apps (e.g. Visio 2010) don't handle WM_PAINT properly and loop forever,
