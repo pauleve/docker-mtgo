@@ -66,5 +66,5 @@ docker kill mtgo_running
 
 ## FAQ
 
-* [Change game resolution](https://github.com/pauleve/docker-mtgo/issues/12)
-* [Access host files](https://github.com/pauleve/docker-mtgo/issues/12) (import/export decks)
+* [Change game resolution](https://github.com/pauleve/docker-mtgo/issues/12#issuecomment-355844711)
+* [Access host files](https://github.com/pauleve/docker-mtgo/issues/11#issuecomment-355766306) (import/export decks)
