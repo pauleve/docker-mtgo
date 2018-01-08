@@ -1,7 +1,7 @@
 # MTGO docker image
 
 This image provides a ready-to-play Magic The Gathering Online (MTGO) for Linux
-and Mac OS X.
+and macOS.
 
 Join the "WineHQ Players" clan!
 
@@ -64,11 +64,7 @@ First, exit with <kbd>Ctrl</kbd>+<kbd>C</kbd>, then
 docker kill mtgo_running
 ```
 
+## FAQ
 
-## Docker image building
-
-```
-make
-```
-
-
+* [Change game resolution](/pauleve/docker-mtgo/issues/12)
+* [Access host files](/pauleve/docker-mtgo/issues/12) (import/export decks)
