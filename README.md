@@ -3,7 +3,7 @@
 This image provides a ready-to-play Magic The Gathering Online (MTGO) for Linux
 and macOS.
 
-Join the "WineHQ Players" clan!
+Join the "WineHQ Players" clan! (Account > Buddies, Clan, Chat > Look for WineHQ Players and contact the captain)
 
 It is based on [i386/debian:stretch-slim](https://hub.docker.com/r/i386/debian/) and wine-staging 2.20.
 
