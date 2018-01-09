@@ -23,6 +23,10 @@ Please give us feedback on https://github.com/pauleve/docker-mtgo/issues/3 (bein
 
 ## Usage
 
+Here are basic usage instructions.
+You may want to have a look at the [wiki](https://github.com/pauleve/docker-mtgo/wiki) as well.
+
+
 Pull latest docker image:
 ```
 docker pull panard/mtgo
