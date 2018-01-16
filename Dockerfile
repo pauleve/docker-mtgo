@@ -40,3 +40,5 @@ USER wine
 RUN cd .wine && mkdir host \
     && mv user.reg system.reg host/ \
     && ln -s host/*.reg .
+
+COPY extra/host-webbrowser /usr/local/bin/xdg-open

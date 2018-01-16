@@ -170,9 +170,11 @@ if [[ ${OSTYPE} == darwin* ]]; then
     sleep 2
     export DISPLAY=$ip:0
     opts="${opts} -e WINE_X11_NO_MITSHM=1"
+    WEBBROWSER=open
 else
     opts="${opts} -v /tmp/.X11-unix:/tmp/.X11-unix:rw"
     opts="${opts} -v $HOME/.Xauthority:/home/wine/.Xauthority:ro"
+    WEBBROWSER=xdg-open
 fi
 
 opts="${opts} --net=host --ipc=host"
@@ -184,11 +186,22 @@ if [ -n "${name}" ]; then
     opts="${opts} --name ${name}"
 fi
 
+URL_REQUESTS=${local_data}/openurl
+> ${URL_REQUESTS}
+chmod 600 ${URL_REQUESTS}
+(tail -f ${URL_REQUESTS} | while read url; do
+    run $WEBBROWSER "${url}"
+done)&
+openurl_pid=$!
+
 #-v /run/user/`id -u`/pulse/native:/run/user/1000/pulse/native \
 #-v /dev/snd:/dev/snd \
 
 run docker run --privileged --rm -e DISPLAY \
     ${opts} ${image} ${cmd}
+
+rm -f ${URL_REQUESTS}
+pkill -TERM -P $openurl_pid
 
 if [[ ${OSTYPE} == darwin* ]]; then
     kill ${socat_pid}
