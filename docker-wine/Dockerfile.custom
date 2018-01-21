@@ -26,7 +26,7 @@ RUN if [ ${WINE_DIST} = staging ]; then \
     ; fi
 #        -W secur32-Zero_Buffer_Length \
 
-ARG PATCHES="
+ARG PATCHES="\
     WINE_X11_NO_MITSHM \
     "
 COPY wine-*.patch /usr/src/wine/

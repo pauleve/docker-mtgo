@@ -27,6 +27,11 @@ RUN apt-get update \
     && apt autoremove -y --purge \
     && apt clean -y && rm -rf /var/lib/apt/lists/*
 
+RUN apt update && apt install -y libpulsedsp \
+    && apt autoremove -y --purge \
+    && apt clean -y && rm -rf /var/lib/apt/lists/*
+COPY extra/pulse-client.conf /etc/pulse/client.conf
+
 ENV WINEDEBUG -all
 
 COPY extra/mtgo.sh /usr/local/bin/mtgo
