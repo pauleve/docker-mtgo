@@ -18,8 +18,7 @@ Using [Homebrew](https://brew.sh/), install XQuartz, socat, and the GNU version 
 brew cask install xquartz 
 brew install socat gnu-getopt wget
 ```
-Then *restart* your session and follow the standard usage.
-Please give us feedback on https://github.com/pauleve/docker-mtgo/issues/3 (being positive or negative, with the full output of the `run-mtgo` script).
+Then **restart your session** (or reboot) and follow the standard usage.
 
 ## Usage
 
