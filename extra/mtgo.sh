@@ -1,9 +1,13 @@
 #!/bin/bash
 do_winecfg=false
+do_sound=false
 while [ -n "${1:-}" ]; do
    case "${1:-}" in
      --winecfg)
         do_winecfg=true
+        ;;
+     --sound)
+        do_sound=true
         ;;
    esac
    shift
@@ -12,6 +16,13 @@ done
 trap "exit" INT
 
 $do_winecfg && (winecfg ; wineserver -kw; sleep 1)
+if $do_sound; then
+    winetricks sound=pulse
+    wineserver -kw
+else
+    winetricks sound=disabled
+    wineserver -kw
+fi
 wine /opt/mtgo/mtgo.exe
 started=0
 s=1

@@ -27,9 +27,14 @@ RUN apt-get update \
     && apt autoremove -y --purge \
     && apt clean -y && rm -rf /var/lib/apt/lists/*
 
-RUN apt update && apt install -y libpulsedsp \
+###
+# Sound support
+###
+RUN apt update && apt install -y --no-install-recommends \
+        gstreamer1.0-plugins-good \
     && apt autoremove -y --purge \
-    && apt clean -y && rm -rf /var/lib/apt/lists/*
+    && apt clean -y && rm -rf /var/lib/apt/lists/* \
+    && su - $WINE_USER -c "winetricks sound=disabled"
 COPY extra/pulse-client.conf /etc/pulse/client.conf
 
 ENV WINEDEBUG -all
