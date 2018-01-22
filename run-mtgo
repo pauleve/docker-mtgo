@@ -5,9 +5,12 @@ defaultcmd="mtgo"
 image=panard/mtgo:latest
 name=mtgo_running
 cmd=$defaultcmd
+cmdargs=""
 opts=""
 data=""
 data_is_volume=false
+do_sound=false
+do_update=false
 
 local_data="$HOME/.local/share/mtgo"
 
@@ -17,6 +20,7 @@ Usage: $0 [opts] [image]
 
 Options:
     -h, --help          display this message and exit
+    --sound             enable sound (requires PulseAudio and Linux)
     --cmd CMD           initial command (default: $cmd)
     --data PATH         path to store data (default: docker volume mtgo-data)
     --data-volume VOL   docker volume to store data (default: mtgo-data)
@@ -27,6 +31,7 @@ Options:
     --dry-run           simply print the docker run command
     --no-tz             disable timezone detection
     --test              test environment
+    --update            update docker image before run
     -e                  docker run option (environment)
     -v                  docker run option (mount volume)
     -u                  docker run option (change user)
@@ -35,8 +40,10 @@ Options:
 
 lopts="dry-run,help,winecfg,shell,cmd:,name:"
 lopts="${lopts},data:,data-volume:,reset"
+lopts="${lopts},sound"
 lopts="${lopts},test"
 lopts="${lopts},no-tz"
+lopts="${lopts},update"
 
 getopt=getopt
 brew_getopt="/usr/local/opt/gnu-getopt/bin/getopt"
@@ -73,23 +80,31 @@ case "${1:-}" in
     --dry-run)
         do_run=false ;;
     --winecfg)
-        cmd="${defaultcmd} $1" ;;
+        [[ "$cmd" == "mtgo" ]] && cmdargs="${cmdargs} $1";;
+    --sound)
+        [[ "$cmd" == "mtgo" ]] && cmdargs="${cmdargs} $1"
+        image=panard/mtgo:sound
+        do_sound=true ;;
     --reset)
         do_reset=true ;;
     --shell)
         cmd="bash"
+        cmdargs=""
         opts="${opts} -it" ;;
     --test)
         local_data="$HOME/.local/share/mtgo-test"
         do_test=true ;;
     --cmd) shift;
         cmd="$1"
+        cmdargs=""
         opts="${opts} -it" ;;
     --no-tz)
         detect_tz=false
         mytz="" ;;
      --name) shift;
         name="$1" ;;
+     --update)
+        do_update=true ;;
      -e|-v|-u)
         opts="${opts} $1 $2" ;;
      --) shift ; shift
@@ -177,6 +192,19 @@ else
     WEBBROWSER=xdg-open
 fi
 
+if $do_sound; then
+    if [[ ${OSTYPE} != linux-gnu ]]; then
+        echo "Sound is currently supported only on Linux"
+        exit 1
+    fi
+    _host_pulse="/run/user/$(id -u)/pulse"
+    if [ ! -d $_host_pulse ]; then
+        echo "PulseAudio does not seem active (${_host_pulse} not found)"
+        exit 1
+    fi
+    opts="${opts} -it -v ${_host_pulse}:/run/user/1000/pulse"
+fi
+
 opts="${opts} --net=host --ipc=host"
 if [ -n "${mytz}" ]; then
     opts="${opts} -e TZ=/usr/share/zoneinfo/${mytz}"
@@ -197,8 +225,12 @@ openurl_pid=$!
 #-v /run/user/`id -u`/pulse/native:/run/user/1000/pulse/native \
 #-v /dev/snd:/dev/snd \
 
+if $do_update; then
+    run docker pull ${image}
+fi
+
 run docker run --privileged --rm -e DISPLAY \
-    ${opts} ${image} ${cmd}
+    ${opts} ${image} ${cmd} ${cmdargs}
 
 rm -f ${URL_REQUESTS}
 pkill -TERM -P $openurl_pid

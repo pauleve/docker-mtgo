@@ -25,12 +25,6 @@ Then **restart your session** (or reboot) and follow the standard usage.
 Here are basic usage instructions.
 You may want to have a look at the [wiki](https://github.com/pauleve/docker-mtgo/wiki) as well.
 
-
-Pull latest docker image:
-```
-docker pull panard/mtgo
-```
-
 Run the docker image using [run-mtgo](./run-mtgo?raw=true) helper script
 ```
 ./run-mtgo
@@ -45,6 +39,11 @@ chmod +x run-mtgo
 If you want to customize wine (notably the graphics), you can use
 ```
 ./run-mtgo --winecfg
+```
+
+To ensure running the latest docker image, use
+```
+./run-mtgo --update
 ```
 
 See
