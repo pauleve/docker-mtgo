@@ -197,12 +197,12 @@ if $do_sound; then
         echo "Sound is currently supported only on Linux"
         exit 1
     fi
-    _host_pulse="/run/user/$(id -u)/pulse"
-    if [ ! -d $_host_pulse ]; then
+    _host_pulse="/run/user/$(id -u)/pulse/native"
+    if [ ! -S $_host_pulse ]; then
         echo "PulseAudio does not seem active (${_host_pulse} not found)"
         exit 1
     fi
-    opts="${opts} -it -v ${_host_pulse}:/run/user/1000/pulse"
+    opts="${opts} -i -v ${_host_pulse}:/run/user/1000/pulse/native"
 fi
 
 opts="${opts} --net=host --ipc=host"
@@ -221,9 +221,6 @@ chmod 600 ${URL_REQUESTS}
     run $WEBBROWSER "${url}"
 done)&
 openurl_pid=$!
-
-#-v /run/user/`id -u`/pulse/native:/run/user/1000/pulse/native \
-#-v /dev/snd:/dev/snd \
 
 if $do_update; then
     run docker pull ${image}
