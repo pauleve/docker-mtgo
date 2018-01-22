@@ -34,6 +34,8 @@ RUN apt update && apt install -y --no-install-recommends \
         gstreamer1.0-plugins-good \
     && apt autoremove -y --purge \
     && apt clean -y && rm -rf /var/lib/apt/lists/* \
+    && for x in cutter gio; do \
+        rm /usr/lib/i386-linux-gnu/gstreamer-1.0/libgst$x.so; done \
     && su - $WINE_USER -c "winetricks sound=disabled"
 COPY extra/pulse-client.conf /etc/pulse/client.conf
 
