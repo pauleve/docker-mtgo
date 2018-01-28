@@ -21,6 +21,7 @@ Usage: $0 [opts] [image]
 Options:
     -h, --help          display this message and exit
     --sound             enable sound (requires PulseAudio and Linux)
+    --disable-sound     ensure that sound is disabled
     --cmd CMD           initial command (default: $cmd)
     --data PATH         path to store data (default: docker volume mtgo-data)
     --data-volume VOL   docker volume to store data (default: mtgo-data)
@@ -40,7 +41,7 @@ Options:
 
 lopts="dry-run,help,winecfg,shell,cmd:,name:"
 lopts="${lopts},data:,data-volume:,reset"
-lopts="${lopts},sound"
+lopts="${lopts},sound,disable-sound"
 lopts="${lopts},test"
 lopts="${lopts},no-tz"
 lopts="${lopts},update"
@@ -85,6 +86,8 @@ case "${1:-}" in
         [[ "$cmd" == "mtgo" ]] && cmdargs="${cmdargs} $1"
         image=panard/mtgo:sound
         do_sound=true ;;
+    --disable-sound)
+        [[ "$cmd" == "mtgo" ]] && cmdargs="${cmdargs} $1" ;;
     --reset)
         do_reset=true ;;
     --shell)
