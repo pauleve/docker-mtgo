@@ -13,12 +13,17 @@ done
 
 trap "exit" INT
 
-$do_sound && (winetricks sound=pulse; wineserver -kw)
-$do_nosound && (winetricks sound=disabled; wineserver -kw)
-$do_winecfg && (winecfg ; wineserver -kw; sleep 1)
+run() {
+    echo "${@}"
+    "${@}"
+}
 
-wineboot
-wine /opt/mtgo/mtgo.exe
+$do_sound && (run winetricks sound=pulse; run wineserver -kw)
+$do_nosound && (run winetricks sound=disabled; run wineserver -kw)
+$do_winecfg && (run winecfg ; run wineserver -kw; sleep 1)
+
+run wineboot
+run wine /opt/mtgo/mtgo.exe
 started=0
 s=1
 while :; do
@@ -31,7 +36,7 @@ while :; do
         s=3
     elif [ $started -eq 1 ] && [ $r -eq 1 ]; then
         echo "====== shutting down"
-        wineserver -kw
+        run wineserver -kw
         exit
     fi
 done
