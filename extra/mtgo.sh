@@ -17,6 +17,7 @@ $do_sound && (winetricks sound=pulse; wineserver -kw)
 $do_nosound && (winetricks sound=disabled; wineserver -kw)
 $do_winecfg && (winecfg ; wineserver -kw; sleep 1)
 
+wineboot
 wine /opt/mtgo/mtgo.exe
 started=0
 s=1

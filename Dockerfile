@@ -20,8 +20,9 @@ RUN apt-get update \
         cabextract \
         xauth \
         xvfb \
-    && su - $WINE_USER -c winecfg \
+    && su - $WINE_USER -c 'wineboot -i' \
     && su - $WINE_USER -c 'xvfb-run -a taskset -c 0 winetricks -q corefonts dotnet462 win7' \
+    && su - $WINE_USER -c 'wineboot -s' \
     && rm -rf /home/wine/.cache \
     && apt remove -y --purge xauth xvfb \
     && apt autoremove -y --purge \
@@ -32,6 +33,7 @@ RUN apt-get update \
 ###
 RUN apt update && apt install -y --no-install-recommends \
         gstreamer1.0-plugins-good \
+        pulseaudio-utils \
     && apt autoremove -y --purge \
     && apt clean -y && rm -rf /var/lib/apt/lists/* \
     && for x in alpha avi cutter gio; do \
