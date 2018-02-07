@@ -179,8 +179,13 @@ opts="${opts} -v ${data}:/home/wine/.wine/drive_c/users/"
 #-v "${data}:/home/wine/.wine/drive_c/windows/Microsoft.NET/Framework/v4.0.30319/Wizards of the Coast, LLC/" \
 
 if [[ ${OSTYPE} == darwin* ]]; then
-    iface=en0
+    iface=$(route -n get 0.0.0.0 2>/dev/null | awk '/interface: / {print $2}')
+    echo "Using network interface '${iface}'"
     ip=$(ifconfig $iface | grep inet | awk '$1=="inet" {print $2}')
+    if [ -z ${ip} ]; then
+        echo "Cannot find your local IP address (iface=$iface)."
+        exit 1
+    fi
     run open -a XQuartz
     echo "socat on $ip forwarding to $DISPLAY"
     socat TCP4-LISTEN:6000,bind=$ip,range=$ip/32,reuseaddr,fork UNIX-CLIENT:\"$DISPLAY\" &
