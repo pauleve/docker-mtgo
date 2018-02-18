@@ -1,7 +1,7 @@
 From: Anton Romanov <theli.ua@gmail.com>
-Subject: [PATCH v5] windowscodecs: Fix data corruption for Adobe CMYK JPEGs
-Message-Id: <20180206063845.16027-1-theli.ua@gmail.com>
-Date: Mon,  5 Feb 2018 22:38:45 -0800
+Subject: [PATCH v9] windowscodecs: Fix data corruption for Adobe CMYK JPEGs
+Message-Id: <20180217073201.9220-1-theli.ua@gmail.com>
+Date: Fri, 16 Feb 2018 23:32:01 -0800
 
 Fixes https://bugs.winehq.org/show_bug.cgi?id=43520
 
@@ -9,12 +9,12 @@ Signed-off-by: Anton Romanov <theli.ua@gmail.com>
 ---
  dlls/windowscodecs/jpegformat.c       |  10 ++-
  dlls/windowscodecs/tests/Makefile.in  |   1 +
- dlls/windowscodecs/tests/jpegformat.c | 129 ++++++++++++++++++++++++++++++++++
- 3 files changed, 138 insertions(+), 2 deletions(-)
+ dlls/windowscodecs/tests/jpegformat.c | 145 ++++++++++++++++++++++++++++++++++
+ 3 files changed, 154 insertions(+), 2 deletions(-)
  create mode 100644 dlls/windowscodecs/tests/jpegformat.c
 
 diff --git a/dlls/windowscodecs/jpegformat.c b/dlls/windowscodecs/jpegformat.c
-index ef050ba688..a85150c290 100644
+index ef050ba688..aab4b92740 100644
 --- a/dlls/windowscodecs/jpegformat.c
 +++ b/dlls/windowscodecs/jpegformat.c
 @@ -680,9 +680,15 @@ static HRESULT WINAPI JpegDecoder_Frame_CopyPixels(IWICBitmapFrameDecode *iface,
@@ -23,7 +23,7 @@ index ef050ba688..a85150c290 100644
          if (This->cinfo.out_color_space == JCS_CMYK && This->cinfo.saw_Adobe_marker)
 +        {
 +            DWORD *pDwordData = (DWORD*) (This->image_data + stride * first_scanline);
-+            DWORD *pDwordDataEnd = pDwordData + stride * max_rows;
++            DWORD *pDwordDataEnd = (DWORD*) (This->image_data + This->cinfo.output_scanline * stride);
 +
              /* Adobe JPEG's have inverted CMYK data. */
 -            for (i=0; i<data_size; i++)
@@ -47,10 +47,26 @@ index b1e78f995c..3d64210ba0 100644
  	tiffformat.c
 diff --git a/dlls/windowscodecs/tests/jpegformat.c b/dlls/windowscodecs/tests/jpegformat.c
 new file mode 100644
-index 0000000000..4bd57d0743
+index 0000000000..c1e46c4869
 --- /dev/null
 +++ b/dlls/windowscodecs/tests/jpegformat.c
-@@ -0,0 +1,129 @@
+@@ -0,0 +1,145 @@
++/*
++ * This library is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU Lesser General Public
++ * License as published by the Free Software Foundation; either
++ * version 2.1 of the License, or (at your option) any later version.
++ *
++ * This library is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++ * Lesser General Public License for more details.
++ *
++ * You should have received a copy of the GNU Lesser General Public
++ * License along with this library; if not, write to the Free Software
++ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
++ */
++
 +#define COBJMACROS
 +
 +#include "objbase.h"
