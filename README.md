@@ -5,7 +5,7 @@ and macOS.
 
 Join the "WineHQ Players" clan! (Account > Buddies, Clan, Chat > Look for WineHQ Players and contact the captain, or send a mail to panard at inzenet dot org with your MTGO user name)
 
-It is based on [i386/debian:stretch-slim](https://hub.docker.com/r/i386/debian/) and wine-staging 2.20.
+It is based on [i386/debian:stretch-slim](https://hub.docker.com/r/i386/debian/) and wine 3.2.
 
 See https://appdb.winehq.org/objectManager.php?sClass=version&iId=32007 for more information.
 
@@ -15,7 +15,7 @@ MacOS support is still under test.
 Using [Homebrew](https://brew.sh/), install XQuartz, socat, and the GNU version of getopt:
 
 ```
-brew cask install xquartz 
+brew cask install xquartz
 brew install socat gnu-getopt wget
 ```
 Then **restart your session** (or reboot) and follow the standard usage.

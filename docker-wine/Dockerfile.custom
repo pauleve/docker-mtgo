@@ -8,28 +8,17 @@ WORKDIR /usr/src/wine
 RUN apt-get update && \
     apt-get install -y devscripts build-essential
 
-ARG WINE_DIST=staging
+ARG WINE_DIST=devel
 COPY debian-${WINE_DIST} /usr/src/wine/debian
 RUN mk-build-deps -i -r -t "apt-get -y --no-install-recommends" debian/control
 
-ARG WINE_GIT=2.20
-RUN curl -L https://github.com/wine-mirror/wine/archive/wine-$WINE_GIT.tar.gz \
+ARG WINE_GIT=wine-mirror/wine
+ARG WINE_TAG=wine-3.2
+RUN curl -L https://github.com/$WINE_GIT/archive/$WINE_TAG.tar.gz \
     | tar xz --strip-components 1
 
-ARG WINE_STAGING=v$WINE_GIT
-RUN if [ ${WINE_DIST} = staging ]; then \
-    curl -L https://github.com/wine-compholio/wine-staging/archive/$WINE_STAGING.tar.gz \
-    | tar xz --strip-components 1; fi
-RUN if [ ${WINE_DIST} = staging ]; then \
-    ./patches/patchinstall.sh DESTDIR="$PWD" --all \
-    ; fi
-#        -W secur32-Zero_Buffer_Length \
-
-ARG PATCHES="\
-    WINE_X11_NO_MITSHM \
-    MTGO-ole32"
 COPY wine-*.patch /usr/src/wine/
-RUN for p in $PATCHES; do patch -p1 < wine-$p.patch; done
+RUN for p in *.patch; do patch -p1 < $p; done
 RUN debuild --no-lintian -us -uc -b -j7
 RUN rm -v /usr/src/wine-$WINE_DIST-d*
 
@@ -40,7 +29,7 @@ ENV WINEARCH win32
 
 COPY --from=builder /usr/src/*.deb /usr/src/
 
-ENV WINE_DIST staging
+ENV WINE_DIST devel
 RUN apt-get update && \
     apt install -y --no-install-recommends \
         /usr/src/wine-${WINE_DIST}-i386_2.2.0~stretch_i386.deb \

@@ -20,8 +20,9 @@ RUN apt-get update \
         cabextract \
         xauth \
         xvfb \
-    && su - $WINE_USER -c winecfg \
+    && su - $WINE_USER -c 'wineboot -i' \
     && su - $WINE_USER -c 'xvfb-run -a taskset -c 0 winetricks -q corefonts dotnet462 win7' \
+    && su - $WINE_USER -c 'wineboot -s' \
     && rm -rf /home/wine/.cache \
     && apt remove -y --purge xauth xvfb \
     && apt autoremove -y --purge \
