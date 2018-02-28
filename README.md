@@ -24,7 +24,7 @@ chmod +x run-mtgo
 
 ### macOS
 
-MacOS support is still under test.
+Support for macOS is still under test.
 Using [Homebrew](https://brew.sh/), install XQuartz, socat, and the GNU version of getopt.
 
 ```
@@ -39,7 +39,7 @@ chmod +x run-mtgo
 
 ## Usage
 
-Run the docker image using [run-mtgo](./run-mtgo?raw=true) helper script
+Run the docker image using the [run-mtgo](./run-mtgo?raw=true) helper script
 ```
 ./run-mtgo
 ```
