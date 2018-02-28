@@ -9,43 +9,62 @@ It is based on [i386/debian:stretch-slim](https://hub.docker.com/r/i386/debian/)
 
 See https://appdb.winehq.org/objectManager.php?sClass=version&iId=32007 for more information.
 
-### Note for macOS users
+## Installation
+
+A necessary prerequisite is to install **docker**: https://www.docker.com/community-edition#/download.
+You do _not_ need wine.
+
+### Linux
+
+Open a terminal and install the `run-mtgo` script:
+```
+wget -O run-mtgo https://raw.githubusercontent.com/pauleve/docker-mtgo/master/run-mtgo
+chmod +x run-mtgo
+```
+
+### macOS
 
 MacOS support is still under test.
-Using [Homebrew](https://brew.sh/), install XQuartz, socat, and the GNU version of getopt:
+Using [Homebrew](https://brew.sh/), install XQuartz, socat, and the GNU version of getopt.
 
 ```
 brew cask install xquartz
 brew install socat gnu-getopt
 ```
-Then **restart your session** (or reboot) and follow the standard usage.
+Then **restart your session** (or reboot) and, install the `run-mtgo` script:
+```
+curl -o run-mtgo https://raw.githubusercontent.com/pauleve/docker-mtgo/master/run-mtgo
+chmod +x run-mtgo
+```
 
 ## Usage
-
-Here are basic usage instructions.
-You may want to have a look at the [wiki](https://github.com/pauleve/docker-mtgo/wiki) as well.
 
 Run the docker image using [run-mtgo](./run-mtgo?raw=true) helper script
 ```
 ./run-mtgo
 ```
 
-The script `run-mtgo` can be installed and upgraded as follows:
+If for some reason you are prompted for .NET installation, abort, press Ctrl+C to quit the script and run
 ```
-curl -o run-mtgo https://raw.githubusercontent.com/pauleve/docker-mtgo/master/run-mtgo
-# or wget -O run-mtgo https://raw.githubusercontent.com/pauleve/docker-mtgo/master/run-mtgo
-chmod +x run-mtgo
+./run-mtgo --reset
 ```
+(use the `--reset` option only once).
 
-If you want to customize wine (notably the graphics), you can use
+Depending on your configuration, you may want to adjust the resolution of the game, or even switch to desktop emulation which may fix some graphics issues.
 ```
 ./run-mtgo --winecfg
 ```
+It will launch a configuration tool prior to launching MTGO. There you may be interested in the Graphics tab.
+
+
 
 To ensure running the latest docker image, use
 ```
 ./run-mtgo --update
 ```
+You shoud consider updating the `run-mtgo` script as well by following the
+installation procedure.
+
 
 See
 ```
