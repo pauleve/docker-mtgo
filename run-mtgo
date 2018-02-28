@@ -230,6 +230,8 @@ chmod 600 ${URL_REQUESTS}
 done)&
 openurl_pid=$!
 
+set +e
+
 if $do_update; then
     run docker pull ${image}
 fi
