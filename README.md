@@ -16,7 +16,7 @@ Using [Homebrew](https://brew.sh/), install XQuartz, socat, and the GNU version 
 
 ```
 brew cask install xquartz
-brew install socat gnu-getopt wget
+brew install socat gnu-getopt
 ```
 Then **restart your session** (or reboot) and follow the standard usage.
 
@@ -32,7 +32,8 @@ Run the docker image using [run-mtgo](./run-mtgo?raw=true) helper script
 
 The script `run-mtgo` can be installed and upgraded as follows:
 ```
-wget -O run-mtgo https://raw.githubusercontent.com/pauleve/docker-mtgo/master/run-mtgo
+curl -o run-mtgo https://raw.githubusercontent.com/pauleve/docker-mtgo/master/run-mtgo
+# or wget -O run-mtgo https://raw.githubusercontent.com/pauleve/docker-mtgo/master/run-mtgo
 chmod +x run-mtgo
 ```
 
