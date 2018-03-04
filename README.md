@@ -29,7 +29,8 @@ Using [Homebrew](https://brew.sh/), install XQuartz, socat, and the GNU version 
 
 ```
 brew cask install xquartz
-brew install socat gnu-getopt
+brew install socat
+brew install gnu-getopt
 ```
 Then **restart your session** (or reboot) and, install the `run-mtgo` script:
 ```
