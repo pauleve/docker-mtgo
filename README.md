@@ -39,6 +39,8 @@ curl -o run-mtgo https://raw.githubusercontent.com/pauleve/docker-mtgo/master/ru
 chmod +x run-mtgo
 ```
 
+*Important for macOS users*: depending on your configuration the Docker image may not work properly. You can consider installing MTGO using Wine directly, following the instructions here: https://github.com/pauleve/docker-mtgo/wiki/macOS:-installing-MTGO-using-Wine
+
 ## Usage
 
 Run the docker image using the [run-mtgo](./run-mtgo?raw=true) helper script
