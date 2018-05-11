@@ -90,6 +90,14 @@ First, exit with <kbd>Ctrl</kbd>+<kbd>C</kbd>, then
 docker kill mtgo_running
 ```
 
+* `run-mtgo` got permission denied while trying to connect to the Docker daemon socket:
+
+Add yourself to the docker group:
+```
+sudo usermod -aG docker $USER
+```
+You need to logout/login for the changes to take effect.
+
 ## FAQ
 
 * [Change game resolution](https://github.com/pauleve/docker-mtgo/issues/12#issuecomment-355844711)
