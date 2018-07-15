@@ -28,7 +28,7 @@ RUN apt-get update \
     && apt autoremove -y --purge \
     && apt clean -y && rm -rf /var/lib/apt/lists/*
 
-ENV WINEDEBUG -all
+ENV WINEDEBUG -all,err+all
 
 COPY extra/mtgo.sh /usr/local/bin/mtgo
 

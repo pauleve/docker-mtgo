@@ -31,6 +31,7 @@ Options:
     --winecfg           run winecfg before calling MTGO
     --dry-run           simply print the docker run command
     --no-tz             disable timezone detection
+    --debug             enable debug information
     --test              test environment
     --update            update docker image before run
     -e                  docker run option (environment)
@@ -45,6 +46,7 @@ lopts="${lopts},sound,disable-sound"
 lopts="${lopts},test"
 lopts="${lopts},no-tz"
 lopts="${lopts},update"
+lopts="${lopts},debug"
 
 getopt=getopt
 brew_getopt="/usr/local/opt/gnu-getopt/bin/getopt"
@@ -78,6 +80,8 @@ case "${1:-}" in
     --data-volume) shift
         data_is_volume=true
         data="$1" ;;
+    --debug)
+        opts="${opts} -e WINEDEBUG=" ;;
     --dry-run)
         do_run=false ;;
     --winecfg)
