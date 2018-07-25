@@ -129,6 +129,17 @@ run() {
     fi
 }
 
+_host_uid=$(id -u)
+if [[ ${_host_uid} == 0 ]]; then
+    echo "Warning: you should not run this script as root."
+    echo "Instead, consider adding your user to the 'docker' group:"
+    echo "    sudo usermod -aG docker $$USER"
+    echo "then restarting your session."
+    echo "Press Enter to continue anyway, or CTRL+C to abort"
+    read
+    _host_uid=1000
+fi
+
 if $detect_tz; then
     if [ -f /etc/timezone ]; then
         mytz=$(</etc/timezone)
@@ -209,7 +220,7 @@ if $do_sound; then
         echo "Sound is currently supported only on Linux"
         exit 1
     fi
-    _host_pulse="/run/user/$(id -u)/pulse/native"
+    _host_pulse="/run/user/${_host_uid}/pulse/native"
     if [ ! -S $_host_pulse ]; then
         echo "PulseAudio does not seem active (${_host_pulse} not found)"
         exit 1
