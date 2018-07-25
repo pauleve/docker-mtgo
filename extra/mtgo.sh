@@ -18,8 +18,11 @@ run() {
     "${@}"
 }
 
-$do_sound && (run winetricks sound=pulse; run wineserver -kw)
-$do_nosound && (run winetricks sound=disabled; run wineserver -kw)
+if $do_sound; then
+    run winetricks sound=pulse
+else
+    run winetricks sound=disabled
+fi
 $do_winecfg && (run winecfg ; run wineserver -kw; sleep 1)
 
 run wineboot
