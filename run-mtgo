@@ -216,16 +216,46 @@ else
 fi
 
 if $do_sound; then
-    if [[ ${OSTYPE} != linux-gnu ]]; then
-        echo "Sound is currently supported only on Linux"
-        exit 1
+    if [[ ${OSTYPE} == darwin* ]]; then
+        set +e
+        pulseaudio --version>/dev/null
+        if [ $? -ne 0 ]; then
+            echo "PulseAudio does not seem to be installed."
+            run brew install pulseaudio
+        fi
+        set -e
+        pascript="$(pulseaudio --dump-conf|grep '^default-script-file = '|sed 's/^.*= *//')"
+        echo $pascript
+        pa_modified=false
+        set +e
+        pa_has_esound=$(grep "^load-module module-esound-protocol-tcp" "${pascript}")
+        pa_has_native=$(grep "^load-module module-native-protocol-tcp" "${pascript}")
+        set -e
+        pa_enable_module() {
+            echo "PulseAudio: enabling $1 module"
+            echo "load-module module-$1" | sudo tee -a "${pascript}"
+        }
+        if [ -z "${pa_has_esound}" ]; then
+            pa_enable_module "esound-protocol-tcp"
+            pa_modified=true
+        fi
+        if [ -z "${pa_has_native}" ]; then
+            pa_enable_module "native-protocol-tcp"
+            pa_modified=true
+        fi
+        pulseaudio --check && pulseaudio -k || true
+        run pulseaudio -D
+        opts="${opts} -v $HOME/.config/pulse:/home/wine/.config/pulse"
+        opts="${opts} -e PULSE_SERVER=$ip"
+    else
+        _host_pulse="/run/user/${_host_uid}/pulse/native"
+        if [ ! -S $_host_pulse ]; then
+            echo "PulseAudio does not seem active (${_host_pulse} not found)"
+            echo "Run 'pulseaudio --start' and try again"
+            exit 1
+        fi
+        opts="${opts} -i -v ${_host_pulse}:/run/user/1000/pulse/native"
     fi
-    _host_pulse="/run/user/${_host_uid}/pulse/native"
-    if [ ! -S $_host_pulse ]; then
-        echo "PulseAudio does not seem active (${_host_pulse} not found)"
-        exit 1
-    fi
-    opts="${opts} -i -v ${_host_pulse}:/run/user/1000/pulse/native"
 fi
 
 opts="${opts} --net=host --ipc=host"
