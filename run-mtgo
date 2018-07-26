@@ -133,7 +133,7 @@ _host_uid=$(id -u)
 if [[ ${_host_uid} == 0 ]]; then
     echo "Warning: you should not run this script as root."
     echo "Instead, consider adding your user to the 'docker' group:"
-    echo "    sudo usermod -aG docker $$USER"
+    echo "    sudo usermod -aG docker \$USER"
     echo "then restarting your session."
     echo "Press Enter to continue anyway, or CTRL+C to abort"
     read
