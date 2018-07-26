@@ -250,9 +250,8 @@ if $do_sound; then
     else
         _host_pulse="/run/user/${_host_uid}/pulse/native"
         if [ ! -S $_host_pulse ]; then
-            echo "PulseAudio does not seem active (${_host_pulse} not found)"
-            echo "Run 'pulseaudio --start' and try again"
-            exit 1
+            echo "PulseAudio does not seem active (${_host_pulse} not found),"
+            run pulseaudio --start
         fi
         opts="${opts} -i -v ${_host_pulse}:/run/user/1000/pulse/native"
     fi
