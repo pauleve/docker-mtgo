@@ -210,8 +210,12 @@ if [[ ${OSTYPE} == darwin* ]]; then
     opts="${opts} -e WINE_X11_NO_MITSHM=1"
     WEBBROWSER=open
 else
-    opts="${opts} -v /tmp/.X11-unix:/tmp/.X11-unix:rw"
-    opts="${opts} -v $HOME/.Xauthority:/home/wine/.Xauthority:ro"
+    XSOCK="/tmp/.X11-unix"
+    XAUTH="${local_data}/Xauthority"
+    > ${XAUTH}
+    xauth nlist ${DISPLAY} | sed -e 's/^..../ffff/' | xauth -f ${XAUTH} nmerge -
+    opts="${opts} -v ${XSOCK}:${XSOCK}:rw"
+    opts="${opts} -v ${XAUTH}:/home/wine/.Xauthority:ro"
     WEBBROWSER=xdg-open
 fi
 
