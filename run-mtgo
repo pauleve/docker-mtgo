@@ -7,8 +7,7 @@ name=mtgo_running
 cmd=$defaultcmd
 cmdargs=""
 opts=""
-data=""
-data_is_volume=false
+data="mtgo-data-$USER"
 do_sound=false
 do_update=false
 
@@ -23,8 +22,7 @@ Options:
     --sound             enable sound (requires PulseAudio and Linux)
     --disable-sound     ensure that sound is disabled
     --cmd CMD           initial command (default: $cmd)
-    --data PATH         path to store data (default: docker volume mtgo-data)
-    --data-volume VOL   docker volume to store data (default: mtgo-data)
+    --data-volume VOL   docker volume to store data (default: ${data})
     --reset             reset local data and docker volume
     --name NAME         container name (default: $name)
     --shell             start an interactive shell instead of MTGO
@@ -41,7 +39,7 @@ Options:
 }
 
 lopts="dry-run,help,winecfg,shell,cmd:,name:"
-lopts="${lopts},data:,data-volume:,reset"
+lopts="${lopts},data-volume:,reset"
 lopts="${lopts},sound,disable-sound"
 lopts="${lopts},test"
 lopts="${lopts},no-tz"
@@ -74,11 +72,7 @@ fi
 while [ -n "${1:-}" ]; do
 case "${1:-}" in
     --help|-h)  usage && exit 0 ;;
-    --data) shift
-        data_is_volume=false
-        data="$1" ;;
     --data-volume) shift
-        data_is_volume=true
         data="$1" ;;
     --debug)
         opts="${opts} -e WINEDEBUG=" ;;
@@ -100,6 +94,7 @@ case "${1:-}" in
         opts="${opts} -it" ;;
     --test)
         local_data="$HOME/.local/share/mtgo-test"
+	data="${data}-test"
         do_test=true ;;
     --cmd) shift;
         cmd="$1"
@@ -131,13 +126,11 @@ run() {
 
 _host_uid=$(id -u)
 if [[ ${_host_uid} == 0 ]]; then
-    echo "Warning: you should not run this script as root."
+    echo "Error: you should not run this script as root."
     echo "Instead, consider adding your user to the 'docker' group:"
     echo "    sudo usermod -aG docker \$USER"
     echo "then restarting your session."
-    echo "Press Enter to continue anyway, or CTRL+C to abort"
-    read
-    _host_uid=1000
+    exit 1
 fi
 
 if $detect_tz; then
@@ -153,46 +146,55 @@ if $detect_tz; then
     fi
 fi
 
-if [ -z "${data:-}" ]; then
-    if $do_test; then
-        data="mtgo-data-test"
-    else
-        data="mtgo-data"
-    fi
-    data_is_volume=true
-fi
 if $do_reset; then
     msg="You are about to delete ${local_data}"
-    if $data_is_volume; then
-        msg="${msg} and wipe docker volume ${data}"
-    fi
+    msg="${msg} and wipe docker volume ${data}"
     echo "WARNING: $msg"
     echo "Press Enter to continue, CTRL+C to abort"
     read
     rm -vrf "${local_data}"
-    if $data_is_volume; then
-        run docker volume rm $data
-    fi
+    run docker volume rm $data
 fi
-if $data_is_volume; then
-    docker volume inspect $data >/dev/null 2>&1
-    if [ $? -ne 0 ]; then
-        run docker volume create $data
-    fi
+if $do_update; then
+    run docker pull ${image}
 fi
 
+docker volume inspect $data >/dev/null 2>&1
+if [ $? -ne 0 ]; then
+	set -e
+	run docker volume create ${data}
+
+	# migration
+	old_data=mtgo-data
+	set +e
+	docker volume inspect ${old_data}>/dev/null 2>&1
+	if [ $? -eq 0 ]; then
+		set -e
+		echo "Migrating from previous configuration..."
+		run docker run --rm -v ${data}:/home/wine/.wine/host \
+            -v ${old_data}:/data \
+            -v ${local_data}:/ldata \
+            -i ${image} bash<<EOF
+cp -av /data/* /home/wine/.wine/host/
+cp -v /ldata/*.reg /home/wine/.wine/host/
+chown -R wine: /home/wine/.wine/host/
+EOF
+        run docker volume rm ${old_data}
+	else
+		set -e
+		run docker run --rm -v ${data}:/home/wine/.wine/host ${image} true
+	fi
+fi
 set -e
 
 if [ ! -d ${local_data} ]; then
     mkdir -p ${local_data}
-    cd ${local_data}
-    docker run --rm ${image} tar c /home/wine/.wine/host | tar xv --strip-components 4
-    cd -
 fi
-opts="${opts} -v ${local_data}:/home/wine/.wine/host/"
-opts="${opts} -v ${data}:/home/wine/.wine/drive_c/users/"
-#-v "${data}:/home/wine/.wine/drive_c/windows/Microsoft.NET/Framework/v4.0.30319/Wizards of the Coast, LLC/" \
 
+opts="${opts} -v ${data}:/home/wine/.wine/host/"
+opts="${opts} -v ${data}:/home/wine/.wine/drive_c/users/"
+
+reset_xhost=false
 if [[ ${OSTYPE} == darwin* ]]; then
     iface=$(route -n get 0.0.0.0 2>/dev/null | awk '/interface: / {print $2}')
     echo "Using network interface '${iface}'"
@@ -210,6 +212,10 @@ if [[ ${OSTYPE} == darwin* ]]; then
     opts="${opts} -e WINE_X11_NO_MITSHM=1"
     WEBBROWSER=open
 else
+    if [ ${_host_uid} -ne 1000 ]; then
+        run xhost +local:1000
+        reset_xhost=true
+    fi
     XSOCK="/tmp/.X11-unix"
     XAUTH="${local_data}/Xauthority"
     > ${XAUTH}
@@ -270,25 +276,17 @@ if [ -n "${name}" ]; then
     opts="${opts} --name ${name}"
 fi
 
-URL_REQUESTS=${local_data}/openurl
-> ${URL_REQUESTS}
-chmod 600 ${URL_REQUESTS}
-(tail -f ${URL_REQUESTS} | while read url; do
-    run $WEBBROWSER "${url}"
-done)&
-openurl_pid=$!
-
-set +e
-
-if $do_update; then
-    run docker pull ${image}
-fi
-
 run docker run --privileged --rm -e DISPLAY \
-    ${opts} ${image} ${cmd} ${cmdargs}
-
-rm -f ${URL_REQUESTS}
-pkill -TERM -P $openurl_pid
+    ${opts} ${image} ${cmd} ${cmdargs} | while read line; do
+    echo $line
+    if [[ "${line:0:8}" == "OPENURL " ]]; then
+        url="${line:8}"
+	run $WEBBROWSER "${url}"
+    fi
+done
+if $reset_xhost; then
+    run xhost -local:1000
+fi
 
 if [[ ${OSTYPE} == darwin* ]]; then
     kill ${socat_pid}
