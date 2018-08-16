@@ -260,7 +260,7 @@ if $do_sound; then
     else
         _host_pulse="/run/user/${_host_uid}/pulse/native"
         if [ ! -S $_host_pulse ]; then
-            echo "PulseAudio does not seem active (${_host_pulse} not found),"
+            echo "PulseAudio does not seem active (${_host_pulse} not found)"
             run pulseaudio --start
         fi
         opts="${opts} -i -v ${_host_pulse}:/run/user/1000/pulse/native"
@@ -276,14 +276,26 @@ if [ -n "${name}" ]; then
     opts="${opts} --name ${name}"
 fi
 
-run docker run --privileged --rm -e DISPLAY \
-    ${opts} ${image} ${cmd} ${cmdargs} | while read line; do
-    echo $line
-    if [[ "${line:0:8}" == "OPENURL " ]]; then
-        url="${line:8}"
-	run $WEBBROWSER "${url}"
-    fi
-done
+docker_mtgo() {
+    run docker run --privileged --rm -e DISPLAY \
+        ${opts} ${image} ${cmd} ${cmdargs}
+}
+watch_openurl() {
+    while read line; do
+        echo $line
+        if [[ "${line:0:8}" == "OPENURL " ]]; then
+            url="${line:8}"
+            run $WEBBROWSER "${url}"
+        fi
+    done
+}
+
+if [[ "${cmd}" == "mtgo" ]]; then
+    docker_mtgo 2>&1 | watch_openurl
+else
+    docker_mtgo
+fi
+
 if $reset_xhost; then
     run xhost -local:1000
 fi
