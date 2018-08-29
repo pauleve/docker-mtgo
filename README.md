@@ -78,6 +78,22 @@ for other options.
 
 ## Troubleshooting
 
+* `run-mtgo` got permission denied while trying to connect to the Docker daemon socket:
+
+Add yourself to the docker group:
+```
+sudo usermod -aG docker $USER
+```
+You need to logout/login for the changes to take effect.
+
+* There is no sound playing:
+
+Sound is disabled by default, but adventurous users can give a try to
+```
+./run-mtgo --sound
+```
+do not hesitate to report issues.
+
 * `run-mtgo` asks me to install .NET:
 
 First, exit with <kbd>Ctrl</kbd>+<kbd>C</kbd>, then
@@ -90,13 +106,6 @@ First, exit with <kbd>Ctrl</kbd>+<kbd>C</kbd>, then
 docker kill mtgo_running
 ```
 
-* `run-mtgo` got permission denied while trying to connect to the Docker daemon socket:
-
-Add yourself to the docker group:
-```
-sudo usermod -aG docker $USER
-```
-You need to logout/login for the changes to take effect.
 
 ## FAQ
 
