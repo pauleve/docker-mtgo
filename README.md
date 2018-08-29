@@ -9,6 +9,8 @@ It is based on [i386/debian:stretch-slim](https://hub.docker.com/r/i386/debian/)
 
 See https://appdb.winehq.org/objectManager.php?sClass=version&iId=32007 for more information.
 
+
+[![Donate](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=Y27XTWGY3ZZFY)
 [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.me/loicpauleve)
 
 ## Installation
