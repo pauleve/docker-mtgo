@@ -9,6 +9,8 @@ It is based on [i386/debian:stretch-slim](https://hub.docker.com/r/i386/debian/)
 
 See https://appdb.winehq.org/objectManager.php?sClass=version&iId=32007 for more information.
 
+[![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.me/loicpauleve)
+
 ## Installation
 
 A necessary prerequisite is to install **docker**: https://www.docker.com/community-edition#/download.
