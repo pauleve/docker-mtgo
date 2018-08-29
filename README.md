@@ -22,6 +22,12 @@ wget -O run-mtgo https://raw.githubusercontent.com/pauleve/docker-mtgo/master/ru
 chmod +x run-mtgo
 ```
 
+Make sure your user is in the `docker` group (command `groups`). If not, add yourself to the docker group:
+```
+sudo usermod -aG docker $USER
+```
+You need to logout/login for the changes to take effect.
+
 ### macOS
 
 Support for macOS is still under test.
@@ -48,19 +54,17 @@ Run the docker image using the [run-mtgo](./run-mtgo?raw=true) helper script
 ./run-mtgo
 ```
 
-If for some reason you are prompted for .NET installation, abort, press Ctrl+C to quit the script and run
-```
-./run-mtgo --reset
-```
-(use the `--reset` option only once).
-
 Depending on your configuration, you may want to adjust the resolution of the game, or even switch to desktop emulation which may fix some graphics issues.
 ```
 ./run-mtgo --winecfg
 ```
 It will launch a configuration tool prior to launching MTGO. There you may be interested in the Graphics tab.
 
-
+Sound is disabled by default, but adventurous users can give a try to
+```
+./run-mtgo --sound
+```
+do not hesitate to report issues.
 
 To ensure running the latest docker image, use
 ```
@@ -85,14 +89,6 @@ Add yourself to the docker group:
 sudo usermod -aG docker $USER
 ```
 You need to logout/login for the changes to take effect.
-
-* There is no sound playing:
-
-Sound is disabled by default, but adventurous users can give a try to
-```
-./run-mtgo --sound
-```
-do not hesitate to report issues.
 
 * `run-mtgo` asks me to install .NET:
 
