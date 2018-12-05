@@ -1,5 +1,5 @@
 #!/bin/bash
-mtga_launcher="/home/wine/.wine/drive_c/Program Files/Wizards of the Coast/MTGA/MtgaLauncher.exe"
+mtga_launcher="/home/wine/.wine/drive_c/Program Files/Wizards of the Coast/MTGA/MTGA.exe"
 if [ ! -x "$mtga_launcher" ]; then
     echo "Installing MTGA"
     wine /opt/mtga/MTGAInstaller.exe

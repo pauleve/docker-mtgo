@@ -94,7 +94,7 @@ case "${1:-}" in
         opts+=("-it") ;;
     --test)
         local_data="$HOME/.local/share/mtgo-test"
-	data="${data}-test"
+        data="${data}-test"
         do_test=true ;;
     --cmd) shift;
         cmd="$1"
