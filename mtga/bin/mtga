@@ -1,4 +1,15 @@
 #!/bin/bash
+do_winecfg=false
+do_sound=false
+do_nosound=false
+while [ -n "${1:-}" ]; do
+   case "${1:-}" in
+     --winecfg) do_winecfg=true ;;
+     --sound) do_sound=true ;;
+     --disable-sound) do_nosound=true ;;
+   esac
+   shift
+done
 mtga_launcher="/home/wine/.wine/drive_c/Program Files/Wizards of the Coast/MTGA/MTGA.exe"
 
 trap "exit" INT
@@ -8,6 +19,12 @@ run() {
     "${@}"
 }
 
+if $do_sound; then
+    run winetricks sound=pulse winegsreamer=builtin
+else
+    run winetricks sound=disabled winegstreamer=disabled
+fi
+$do_winecfg && (run winecfg ; run wineserver -kw; sleep 1)
 run wineboot
 run winetricks ddr=opengl
 if [ ! -x "$mtga_launcher" ]; then

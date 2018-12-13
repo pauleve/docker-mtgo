@@ -79,13 +79,12 @@ case "${1:-}" in
     --dry-run)
         do_run=false ;;
     --winecfg)
-        [[ "$cmd" == "mtgo" ]] && cmdargs="${cmdargs} $1";;
+        [[ "$cmd" == "mtga" ]] && cmdargs="${cmdargs} $1";;
     --sound)
-        [[ "$cmd" == "mtgo" ]] && cmdargs="${cmdargs} $1"
-        image=panard/mtgo:sound
+        [[ "$cmd" == "mtga" ]] && cmdargs="${cmdargs} $1"
         do_sound=true ;;
     --disable-sound)
-        [[ "$cmd" == "mtgo" ]] && cmdargs="${cmdargs} $1" ;;
+        [[ "$cmd" == "mtga" ]] && cmdargs="${cmdargs} $1" ;;
     --reset)
         do_reset=true ;;
     --shell)
@@ -93,7 +92,7 @@ case "${1:-}" in
         cmdargs=""
         opts+=("-it") ;;
     --test)
-        local_data="$HOME/.local/share/mtgo-test"
+        local_data="$HOME/.local/share/mtga-test"
         data="${data}-test"
         do_test=true ;;
     --cmd) shift;
@@ -165,7 +164,7 @@ if [ $? -ne 0 ]; then
 	run docker volume create ${data}
 
 	# migration
-	old_data=mtgo-data
+	old_data=mtga-data
 	set +e
 	docker volume inspect ${old_data}>/dev/null 2>&1
 	if [ $? -eq 0 ]; then
@@ -230,13 +229,12 @@ opts+=("--device=/dev/dri:/dev/dri")
 
 dri_card="/dev/dri/card0"
 dri_mode=$(stat --printf=%f "$dri_card")
-echo $dri_mode
 if [ $(( 16#${dri_mode} % 8 )) -eq 0 ]; then
     dri_group=$(stat --printf=%g "$dri_card")
     opts+=("--group-add=${dri_group}")
 fi
 
-docker_mtgo() {
+docker_mtga() {
     run docker run --privileged --rm -e DISPLAY \
         "${opts[@]}" ${image} ${cmd} ${cmdargs}
 
@@ -252,9 +250,9 @@ watch_openurl() {
 }
 
 if [[ "${cmd}" == "mtga" ]]; then
-    docker_mtgo 2>&1 | watch_openurl
+    docker_mtga 2>&1 | watch_openurl
 else
-    docker_mtgo
+    docker_mtga
 fi
 
 if $reset_xhost; then
