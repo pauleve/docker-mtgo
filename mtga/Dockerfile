@@ -17,4 +17,6 @@ USER wine
 
 RUN mkdir -p /home/wine/.wine/host/wine/Temp
 
+ENV WINEDEBUG $WINEDEBUG,err-ole,err-mmdevapi,err-dsound
+
 RUN winetricks ddr=opengl
