@@ -16,3 +16,5 @@ COPY bin/mtga /usr/local/bin/mtga
 USER wine
 
 RUN mkdir -p /home/wine/.wine/host/wine/Temp
+
+RUN winetricks ddr=opengl

@@ -225,6 +225,17 @@ if [ -n "${name}" ]; then
     opts+=("--name" "${name}")
 fi
 
+opts+=("--device=/dev/dri:/dev/dri")
+
+
+dri_card="/dev/dri/card0"
+dri_mode=$(stat --printf=%f "$dri_card")
+echo $dri_mode
+if [ $(( 16#${dri_mode} % 8 )) -eq 0 ]; then
+    dri_group=$(stat --printf=%g "$dri_card")
+    opts+=("--group-add=${dri_group}")
+fi
+
 docker_mtgo() {
     run docker run --privileged --rm -e DISPLAY \
         "${opts[@]}" ${image} ${cmd} ${cmdargs}

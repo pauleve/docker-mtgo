@@ -1,30 +1,24 @@
 #!/bin/bash
 mtga_launcher="/home/wine/.wine/drive_c/Program Files/Wizards of the Coast/MTGA/MTGA.exe"
+
+trap "exit" INT
+
+run() {
+    echo "${@}"
+    "${@}"
+}
+
+run wineboot
+run winetricks ddr=opengl
 if [ ! -x "$mtga_launcher" ]; then
     echo "Installing MTGA"
-    wine /opt/mtga/MTGAInstaller.exe
+    run wine /opt/mtga/MTGAInstaller.exe
     sleep 5
     pidof MTGA.exe >/dev/null
     r=$?
     if [ $r -ne 0 ]; then
-        wine "$mtga_launcher"
+        run wine "$mtga_launcher"
     fi
 else
-    wine "$mtga_launcher"
+    run wine "$mtga_launcher"
 fi
-started=0
-s=1
-while :; do
-    sleep $s
-    pidof MTGA.exe >/dev/null
-    r=$?
-    if [ $started -eq 0 ] && [ $r -eq 0 ]; then
-        echo "====== MTGA.exe has started."
-        started=1
-        s=3
-    elif [ $started -eq 1 ] && [ $r -eq 1 ]; then
-        echo "====== shutting down"
-        run wineserver -kw
-        exit
-    fi
-done
