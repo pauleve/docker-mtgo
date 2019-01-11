@@ -1,6 +1,12 @@
-FROM panard/mtgo:latest
+FROM panard/mtgo:2018-12-20
 MAINTAINER Panard <panard@backzone.net>
 CMD mtga
+
+ENV WINEDEBUG $WINEDEBUG,err-ole,err-mmdevapi,err-dsound
+
+RUN mkdir -p /home/wine/.wine/host/wine/Temp
+
+RUN winetricks ddr=opengl
 
 USER root
 
@@ -14,9 +20,3 @@ ADD --chown=wine:wine https://mtgarena.downloads.wizards.com/Live/Windows32/MTGA
 COPY bin/mtga /usr/local/bin/mtga
 
 USER wine
-
-RUN mkdir -p /home/wine/.wine/host/wine/Temp
-
-ENV WINEDEBUG $WINEDEBUG,err-ole,err-mmdevapi,err-dsound
-
-RUN winetricks ddr=opengl

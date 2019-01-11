@@ -22,7 +22,8 @@ RUN apt-get update \
         xauth \
         xvfb \
     && su - $WINE_USER -c 'wineboot -i' \
-    && su - $WINE_USER -c 'xvfb-run -a taskset -c 0 winetricks -q corefonts dotnet462 win7' \
+    && su - $WINE_USER -c 'xvfb-run -a taskset -c 0 winetricks -q corefonts dotnet472 win7' \
+    && su - $WINE_USER -c 'winetricks gdiplus=native'\
     && su - $WINE_USER -c 'winetricks sound=disabled ddr=gdi'\
     && su - $WINE_USER -c 'wineboot -s' \
     && rm -rf /home/wine/.cache \
