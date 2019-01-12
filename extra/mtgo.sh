@@ -30,7 +30,7 @@ $do_winecfg && (run winecfg ; run wineserver -kw; sleep 1)
 run wineboot
 
 # workaround EULA picture
-find ~/.wine/drive_c/ -name 'EULA_en.rtf' -exec sed '/^{\\pict/,/^}/ d' -i "{}" \;
+#find ~/.wine/drive_c/ -name 'EULA_en.rtf' -exec sed '/^{\\pict/,/^}/ d' -i "{}" \;
 
 run wine /opt/mtgo/mtgo.exe
 started=0
