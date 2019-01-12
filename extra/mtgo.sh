@@ -18,10 +18,12 @@ run() {
     "${@}"
 }
 
+commontricks="gdiplus=native"
+
 if $do_sound; then
-    run winetricks sound=pulse winegsreamer=builtin
+    run winetricks ${commontricks} sound=pulse winegsreamer=builtin
 else
-    run winetricks sound=disabled winegstreamer=disabled
+    run winetricks ${commontricks} sound=disabled winegstreamer=disabled
 fi
 $do_winecfg && (run winecfg ; run wineserver -kw; sleep 1)
 
