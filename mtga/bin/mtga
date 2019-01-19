@@ -10,7 +10,7 @@ while [ -n "${1:-}" ]; do
    esac
    shift
 done
-mtga_launcher="/home/wine/.wine/drive_c/Program Files/Wizards of the Coast/MTGA/MtgaLauncher.exe"
+mtga_launcher="/home/wine/.wine/drive_c/Program Files/Wizards of the Coast/MTGA/MTGA.exe"
 
 trap "exit" INT
 
@@ -26,7 +26,6 @@ else
 fi
 $do_winecfg && (run winecfg ; run wineserver -kw; sleep 1)
 run wineboot
-run winetricks ddr=opengl
 if [ ! -x "$mtga_launcher" ]; then
     echo "Installing MTGA"
     run wine /opt/mtga/MTGAInstaller.exe
@@ -39,19 +38,3 @@ if [ ! -x "$mtga_launcher" ]; then
 else
     run wine "$mtga_launcher"
 fi
-started=0
-s=1
-while :; do
-    sleep $s
-    pidof MTGA.exe >/dev/null
-    r=$?
-    if [ $started -eq 0 ] && [ $r -eq 0 ]; then
-        echo "====== MTGA.exe has started."
-        started=1
-        s=3
-    elif [ $started -eq 1 ] && [ $r -eq 1 ]; then
-        echo "====== shutting down"
-        run wineserver -kw
-        exit
-    fi
-done
