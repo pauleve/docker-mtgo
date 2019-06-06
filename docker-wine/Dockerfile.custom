@@ -13,11 +13,11 @@ COPY debian-${WINE_DIST} /usr/src/wine/debian
 RUN mk-build-deps -i -r -t "apt-get -y --no-install-recommends" debian/control
 
 ARG WINE_GIT=wine-mirror/wine
-ARG WINE_TAG=wine-4.0-rc6
+ARG WINE_TAG=wine-4.9
 RUN curl -L https://github.com/$WINE_GIT/archive/$WINE_TAG.tar.gz \
     | tar xz --strip-components 1
 
-COPY wine-*.patch /usr/src/wine/
+COPY *.patch /usr/src/wine/
 RUN for p in *.patch; do patch -p1 < $p; done
 RUN debuild --no-lintian -us -uc -b -j7
 RUN rm -v /usr/src/wine-$WINE_DIST-d*
