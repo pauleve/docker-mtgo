@@ -9,7 +9,7 @@ RUN useradd -u $WINE_UID -d /home/wine -m -s /bin/bash $WINE_USER
 WORKDIR /home/wine
 
 # Winetricks
-ARG WINETRICKS_VERSION=20181203
+ARG WINETRICKS_VERSION=20190310
 ADD https://raw.githubusercontent.com/Winetricks/winetricks/$WINETRICKS_VERSION/src/winetricks /usr/local/bin/winetricks
 RUN chmod 755 /usr/local/bin/winetricks
 
@@ -22,7 +22,7 @@ RUN apt-get update \
         xauth \
         xvfb \
     && su - $WINE_USER -c 'wineboot -i' \
-    && su - $WINE_USER -c 'xvfb-run -a taskset -c 0 winetricks -q corefonts dotnet462 win7' \
+    && su - $WINE_USER -c 'xvfb-run -a taskset -c 0 winetricks -q corefonts dotnet46 win7' \
     && su - $WINE_USER -c 'xvfb-run -a winetricks -q gdiplus gdiplus=native' \
     && su - $WINE_USER -c 'winetricks sound=disabled ddr=gdi'\
     && su - $WINE_USER -c 'wineboot -s' \
