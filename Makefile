@@ -3,17 +3,22 @@ TIMESTAMP=$(shell date +%F)
 
 BASE=panard/mtgo:$(TIMESTAMP)
 
+DOCKER=sudo docker
+
 image:
 	make -C docker-wine $(shell grep FROM Dockerfile|cut -d: -f2)
-	docker build -t $(BASE) .
+	$(DOCKER) build -t $(BASE) .
 
 test:
+	./run-mtgo --test --reset $(BASE)
+
+try:
 	./run-mtgo $(BASE)
 
 push:
-	docker push $(BASE)
+	$(DOCKER) push $(BASE)
 
 validate: push
-	docker tag $(BASE) panard/mtgo:latest
-	docker push panard/mtgo:latest
+	$(DOCKER) tag $(BASE) panard/mtgo:latest
+	$(DOCKER) push panard/mtgo:latest
 
