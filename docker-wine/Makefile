@@ -1,8 +1,8 @@
 
 DOCKER=sudo docker
 
-custom vanilla:
+custom:
 	$(DOCKER) pull i386/debian:stretch-slim
-	$(DOCKER) build -t panard/wine:$@ -f Dockerfile.$@ .
+	$(DOCKER) build -t panard/wine:$@ -f Dockerfile .
 
 
