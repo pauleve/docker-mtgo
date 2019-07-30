@@ -32,7 +32,7 @@ RUN apt-get update \
     && apt clean -y && rm -rf /var/lib/apt/lists/*
 
 # Winetricks
-ARG WINETRICKS_VERSION=20181203
+ARG WINETRICKS_VERSION=20190615
 ADD https://raw.githubusercontent.com/Winetricks/winetricks/$WINETRICKS_VERSION/src/winetricks /usr/local/bin/winetricks
 RUN chmod 755 /usr/local/bin/winetricks
 
