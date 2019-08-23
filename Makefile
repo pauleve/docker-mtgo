@@ -18,7 +18,10 @@ try:
 push:
 	$(DOCKER) push $(BASE)
 
-validate: push
+tag:
+	git tag $(TIMESTAMP)
+
+validate: push tag
 	$(DOCKER) tag $(BASE) panard/mtgo:latest
 	$(DOCKER) push panard/mtgo:latest
 
