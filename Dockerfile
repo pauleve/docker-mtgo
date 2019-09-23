@@ -9,7 +9,7 @@ RUN useradd -u $WINE_UID -d /home/wine -m -s /bin/bash $WINE_USER
 WORKDIR /home/wine
 
 # Winetricks
-ARG WINETRICKS_VERSION=20190615
+ARG WINETRICKS_VERSION=20190912
 ADD https://raw.githubusercontent.com/Winetricks/winetricks/$WINETRICKS_VERSION/src/winetricks /usr/local/bin/winetricks
 RUN chmod 755 /usr/local/bin/winetricks
 
