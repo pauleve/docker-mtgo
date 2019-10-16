@@ -21,7 +21,7 @@ run() {
 commontricks="gdiplus=native"
 
 if $do_sound; then
-    run winetricks ${commontricks} sound=pulse winegsreamer=builtin
+    run winetricks ${commontricks} sound=pulse winegstreamer=builtin
 else
     run winetricks ${commontricks} sound=disabled winegstreamer=disabled
 fi
