@@ -1,0 +1,28 @@
+name: Pre-release
+
+on:
+    release:
+        types: [unpublished, prerelease]
+
+jobs:
+  build:
+    env:
+        BASENAME: panard/mtgo
+        TAG: $GITHUB_REF
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - name: Docker image build
+        run: |
+            make image DOCKER=docker BASE=$BASENAME:$TAG
+            docker tag $BASENAME
+      - name: Login to docker hub
+        uses: actions-hub/docker/login@master
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+      - name: Push image
+        uses: actions-hub/docker@master
+        with:
+            args: push $BASENAME:$TAG
+
