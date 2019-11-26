@@ -2,28 +2,13 @@ name: Docker Image CI
 
 on:
   pull_request:
-    types: [opened, synchronize, reopened, unlabeled, labeled]
+    types: [opened, synchronize, reopened]
 
 jobs:
   validate:
-    env:
-        BASENAME: ${{ github.repository }}
-        TAG: pr-${{ github.even.pull_request.id }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
-      - run: make image DOCKER=docker BASE=$BASENAME:$TAG
+      - run: make image DOCKER=docker
         if: contains(github.event.pull_request.labels.*.name, 'autodocker')
-      - name: Login to docker hub
-        if: contains(github.event.pull_request.labels.*.name, 'autodocker')
-        uses: actions-hub/docker/login@master
-        env:
-          DOCKER_USERNAME: pauleve
-          DOCKER_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
-          DOCKER_REGISTRY_URL: docker.pkg.github.com
-      - name: Push image
-        if: contains(github.event.pull_request.labels.*.name, 'autodocker')
-        uses: actions-hub/docker@master
-        with:
-            args: push $BASENAME:$TAG
 
