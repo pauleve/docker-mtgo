@@ -9,7 +9,7 @@ on:
 jobs:
   validate:
     env:
-        IMAGE: panard/mtgo:pr${{ github.event.pull_request.id }}
+        IMAGE: panard/mtgo:pr${{ github.event.pull_request.number }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
