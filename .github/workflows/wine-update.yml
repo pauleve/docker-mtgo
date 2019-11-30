@@ -24,7 +24,7 @@ jobs:
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v1
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.PAT }}
           commit-message: Update wine to ${{ steps.wine.outputs.release_tag }}
           title: Update wine to ${{ steps.wine.outputs.release_tag }}
           body: |
