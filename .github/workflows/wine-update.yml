@@ -19,7 +19,7 @@ jobs:
         env:
           RELEASE_TAG: ${{ steps.wine.outputs.release_tag }}
         run: |
-            sed -i "s:WINE_TAG=.*$:WINE_TAG=$RELEASE_TAG:" docker-wine/Dockerfile
+            sed -i "s:WINE_TAG=.*$:WINE_TAG=wine-$RELEASE_TAG:" docker-wine/Dockerfile
             sed -i "s:^\(It is based on .* wine \)[^ ]*[0-9]:\1$RELEASE_TAG:" README.md
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v1
