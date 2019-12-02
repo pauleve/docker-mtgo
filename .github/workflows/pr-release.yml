@@ -1,13 +1,13 @@
 name: Automatic release from PR
 on:
-    issue_comment:
-        types: [created]
+    pull_request:
+        types: [labeled]
 jobs:
     merge-and-release:
         env:
             BASENAME: panard/mtgo
         name: Merge and release
-        if: github.event.issue.pull_request != '' && contains(github.event.comment.body, '/merge-and-release') && github.event.comment.user.login == 'pauleve'
+        if: contains(github.event.pull_request.labels.*.name, 'merge-and-release')
         runs-on: ubuntu-latest
         steps:
             - name: Dump GitHub context
@@ -16,7 +16,7 @@ jobs:
               run: echo "$GITHUB_CONTEXT"
             - name: Tags
               run: |
-                echo ::set-env name=PR_TAG::pr${{ github.event.issue.number }}
+                echo ::set-env name=PR_TAG::pr${{ github.event.pull_request.number }}
                 echo ::set-env name=TIMESTAMP::$(date +%F)
             - name: Login to docker hub
               uses: actions-hub/docker/login@master
