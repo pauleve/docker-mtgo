@@ -16,7 +16,7 @@ jobs:
               run: echo "$GITHUB_CONTEXT"
             - name: Tags
               run: |
-                echo ::set-env name=PR_TAG::pr${{ github.event.issue.pull_request.number }}
+                echo ::set-env name=PR_TAG::pr${{ github.event.issue.number }}
                 echo ::set-env name=TIMESTAMP::$(date +%F)
             - name: Login to docker hub
               uses: actions-hub/docker/login@master
