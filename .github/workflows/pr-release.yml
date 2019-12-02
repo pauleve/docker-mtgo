@@ -7,7 +7,7 @@ jobs:
         env:
             BASENAME: panard/mtgo
         name: Merge and release
-        if: github.event.issue.pull_request != '' && contains(github.event.comment.body, '/merge-and-release') && github.event.comment.user.login == "pauleve"
+        if: github.event.issue.pull_request != '' && contains(github.event.comment.body, '/merge-and-release') && github.event.comment.user.login == 'pauleve'
         runs-on: ubuntu-latest
         steps:
             - name: Tags
