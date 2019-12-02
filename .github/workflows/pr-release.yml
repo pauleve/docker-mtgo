@@ -10,6 +10,10 @@ jobs:
         if: github.event.issue.pull_request != '' && contains(github.event.comment.body, '/merge-and-release') && github.event.comment.user.login == 'pauleve'
         runs-on: ubuntu-latest
         steps:
+            - name: Dump GitHub context
+              env:
+                GITHUB_CONTEXT: ${{ toJson(github) }}
+              run: echo "$GITHUB_CONTEXT"
             - name: Tags
               run: |
                 echo ::set-env name=PR_TAG::pr${{ github.event.issue.pull_request.number }}
