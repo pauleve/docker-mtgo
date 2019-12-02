@@ -1,0 +1,7 @@
+change-template: '- $TITLE'
+template: |
+    $CHANGES
+
+    ```
+    ./run-mtgo --update
+    ```

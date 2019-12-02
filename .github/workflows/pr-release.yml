@@ -1,0 +1,53 @@
+name: Automatic release from PR
+on:
+    issue_comment:
+        types: [created]
+jobs:
+    merge-and-release:
+        env:
+            BASENAME: panard/mtgo
+        name: Merge and release
+        if: github.event.issue.pull_request != '' && contains(github.event.comment.body, '/merge-and-release') && github.event.comment.user.login == "pauleve"
+        runs-on: ubuntu-latest
+        steps:
+            - name: Tags
+              run: |
+                echo ::set-env name=PR_TAG::pr${{ github.event.issue.pull_request.number }}
+                echo ::set-env name=TIMESTAMP::$(date +%F)
+            - name: Login to docker hub
+              uses: actions-hub/docker/login@master
+              env:
+                  DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+                  DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+            - name: Pull image
+              uses: actions-hub/docker@master
+              with:
+                  args: pull $BASENAME:$PR_TAG
+            - name: automerge
+              uses: pascalgn/automerge-action@master
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                  MERGE_LABELS: ""
+                  MERGE_METHOD: "rebase"
+            - uses: actions/checkout@v1
+              with:
+                  ref: master
+            - name: Git tag
+              run: |
+                git tag $TIMESTAMP
+                git push --tags https://${GITHUB_ACTOR}:${{ secrets.GITHUB_TOKEN }}@github.com/${GITHUB_REPOSITORY}.git HEAD:master
+            - run: docker tag $BASENAME:$PR_TAG $BASENAME:$TIMESTAMP
+            - name: Push image :timestamp
+              uses: actions-hub/docker@master
+              with:
+                args: push $BASENAME:$TIMESTAMP
+            - run: docker tag $BASENAME:$PR_TAG $BASENAME:latest
+            - name: Push image :latest
+              uses: actions-hub/docker@master
+              with:
+                args: push $BASENAME:latest
+    default:
+        name: default
+        runs-on: ubuntu-latest
+        steps:
+            - run: echo 1
