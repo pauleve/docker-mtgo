@@ -39,7 +39,7 @@ jobs:
             - name: Git tag
               run: |
                 git tag $TIMESTAMP
-                git push --tags https://${GITHUB_ACTOR}:${{ secrets.GITHUB_TOKEN }}@github.com/${GITHUB_REPOSITORY}.git HEAD:master
+                git push --tags https://${GITHUB_ACTOR}:${{ secrets.PAT }}@github.com/${GITHUB_REPOSITORY}.git HEAD:master
             - run: docker tag $BASENAME:$PR_TAG $BASENAME:$TIMESTAMP
             - name: Push image :timestamp
               uses: actions-hub/docker@master

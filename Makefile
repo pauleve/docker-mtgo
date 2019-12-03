@@ -25,3 +25,10 @@ validate: push tag
 	$(DOCKER) tag $(BASE) panard/mtgo:latest
 	$(DOCKER) push panard/mtgo:latest
 
+.PHONY: sound
+sound:
+	$(DOCKER) build -t panard/mtgo:sound sound/
+
+push-sound:
+	$(DOCKER) push panard/mtgo:sound
+

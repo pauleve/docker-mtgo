@@ -1,0 +1,27 @@
+name: Release actions
+
+on:
+  push:
+    tags:
+      - '*-*-*'
+
+jobs:
+  sound:
+      name: Update sound image
+      env:
+          IMAGE: panard/mtgo:sound
+      runs-on: ubuntu-latest
+      steps:
+      - uses: actions/checkout@v1
+      - run: docker build -t $IMAGE sound
+      - name: Login to docker hub
+        uses: actions-hub/docker/login@master
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+      - name: Push image
+        uses: actions-hub/docker@master
+        with:
+            args: push $IMAGE
+
+
