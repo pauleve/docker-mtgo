@@ -8,6 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
+        ref: master
       - name: Get Latest Wine Version
         id: wine
         run: |
