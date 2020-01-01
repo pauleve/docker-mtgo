@@ -30,7 +30,7 @@ jobs:
             - name: automerge
               uses: pascalgn/automerge-action@master
               env:
-                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                  GITHUB_TOKEN: ${{ secrets.PAT }}
                   MERGE_LABELS: ""
                   MERGE_METHOD: "rebase"
             - uses: actions/checkout@v1
