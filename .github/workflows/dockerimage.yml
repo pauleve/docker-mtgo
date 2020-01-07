@@ -3,7 +3,6 @@ name: Docker Image CI
 on:
   pull_request:
       types:
-          - assigned
           - synchronize
 
 jobs:
