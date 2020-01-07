@@ -44,3 +44,4 @@ jobs:
           labels: autodocker
           branch: auto/wine-updates
           branch-suffix: none
+          base: master
