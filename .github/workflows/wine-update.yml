@@ -1,7 +1,8 @@
 name: Automated Wine update
 on:
   push:
-      branch: master
+      branches:
+          - master
   schedule:
     - cron:  '0 12 * * Sat'
 
