@@ -44,5 +44,4 @@ jobs:
           assignees: pauleve
           labels: autodocker
           branch: auto/wine-updates
-          branch-suffix: none
           base: master
