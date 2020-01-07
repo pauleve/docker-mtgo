@@ -11,7 +11,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
         with:
-          ref: 2019-12-02
+          ref: after-4.10
           token: ${{ secrets.PAT }}
       - name: Get Latest Wine Version
         id: wine
