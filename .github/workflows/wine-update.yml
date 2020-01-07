@@ -7,9 +7,10 @@ jobs:
   updateWine:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2
         with:
           ref: master
+          token: ${{ secrets.PAT }}
       - name: Get Latest Wine Version
         id: wine
         run: |
@@ -26,13 +27,11 @@ jobs:
         uses: peter-evans/create-pull-request@v1
         with:
           token: ${{ secrets.PAT }}
-          author-name: "github-actions[bot]"
-          author-email: "41898282+github-actions[bot]@users.noreply.github.com"
           commit-message: Update wine to ${{ steps.wine.outputs.release_tag }}
           title: Update wine to ≥${{ steps.wine.outputs.release_tag }}
           body: |
               Updates wine to ≥${{ steps.wine.outputs.release_tag }}
-              
+
               ```
               ./run-mtgo --update --test panard/mtgo:pr<#ID>
               ```
