@@ -1,7 +1,0 @@
-/opt/wine-devel/lib/libwine.so*
-/opt/wine-devel/lib/wine
-/opt/wine-devel/bin/wine
-/opt/wine-devel/share/man/man?/wine.?*
-/opt/wine-devel/share/man/de.UTF-8/man?/wine.?*
-/opt/wine-devel/share/man/fr.UTF-8/man?/wine.?*
-/opt/wine-devel/share/man/pl.UTF-8/man?/wine.?*

@@ -1,4 +1,4 @@
-FROM i386/debian:stretch-slim as builder
+FROM i386/debian:stable-slim as builder
 MAINTAINER Panard <panard@inzenet.org>
 
 ENV DEBIAN_FRONTEND noninteractive
@@ -9,11 +9,11 @@ RUN apt-get update && \
     apt-get install -y devscripts build-essential
 
 ARG WINE_DIST=devel
-COPY debian-${WINE_DIST} /usr/src/wine/debian
+COPY debian /usr/src/wine/debian
 RUN mk-build-deps -i -r -t "apt-get -y --no-install-recommends" debian/control
 
 ARG WINE_GIT=wine-mirror/wine
-ARG WINE_TAG=wine-4.9
+ARG WINE_TAG=wine-5.0
 RUN curl -L https://github.com/$WINE_GIT/archive/$WINE_TAG.tar.gz \
     | tar xz --strip-components 1
 
@@ -22,7 +22,7 @@ RUN for p in *.patch; do patch -p1 < $p; done
 RUN debuild --no-lintian -us -uc -b -j7
 RUN rm -v /usr/src/wine-$WINE_DIST-d*
 
-FROM i386/debian:stretch-slim
+FROM i386/debian:stable-slim
 MAINTAINER Panard <panard@inzenet.org>
 ENV DEBIAN_FRONTEND noninteractive
 ENV WINEARCH win32
@@ -32,9 +32,9 @@ COPY --from=builder /usr/src/*.deb /usr/src/
 ENV WINE_DIST devel
 RUN apt-get update && \
     apt install -y --no-install-recommends \
-        /usr/src/wine-${WINE_DIST}-i386_2.2.0~stretch_i386.deb \
-        /usr/src/wine-${WINE_DIST}_2.2.0~stretch_i386.deb \
-        /usr/src/winehq-${WINE_DIST}_2.2.0~stretch_i386.deb && \
+        /usr/src/wine-${WINE_DIST}-i386_5.0_i386.deb \
+        /usr/src/wine-${WINE_DIST}_5.0_i386.deb \
+        /usr/src/winehq-${WINE_DIST}_5.0_i386.deb && \
     apt clean -y && \
     rm -rf /var/lib/apt/lists/*
 

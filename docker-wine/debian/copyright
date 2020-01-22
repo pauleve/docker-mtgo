@@ -1,11 +1,10 @@
 Format: http://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
-Upstream-Name: Wine
-Source: http://www.winehq.org/
+Upstream-Name: Wine Devel
+Source: https://www.winehq.org
 
 Files: *
-Copyright: 1993-2016, the Wine project authors
+Copyright: 1993-2019, the Wine project authors
 License: LGPL-2.1
-
 
 License: LGPL-2.1
  This software is free software; you can redistribute it and/or
@@ -20,4 +19,3 @@ License: LGPL-2.1
  .
  On Debian systems, the complete text of the GNU Library General Public
  License can be found in /usr/share/common-licenses/LGPL-2.1 file.
-
