@@ -7,22 +7,28 @@ export CC = $(shell for _cc in gcc-4.5 gcc-4.7 gcc-4.9 gcc false; do \
 %:
 	dh $@ --parallel
 
-
 override_dh_auto_configure:
-
-
 	# Run configure
+ifeq ($(DEB_BUILD_ARCH), amd64)
+	./configure --prefix=/opt/wine-devel \
+				--libdir=\$${prefix}/lib64 \
+				--mandir=\$${prefix}/share/man \
+				--infodir=\$${prefix}/share/info \
+				--enable-win64 \
+				--disable-tests \
+				--with-gstreamer \
+
+				$(CONFFLAGS)
+else
 	./configure --prefix=/opt/wine-devel \
 				--libdir=\$${prefix}/lib \
 				--mandir=\$${prefix}/share/man \
 				--infodir=\$${prefix}/share/info \
-				--with-gstreamer \
-				--with-xattr \
-				--with-xcb \
 				--disable-tests \
+				--with-gstreamer \
+
 				$(CONFFLAGS)
-				#--without-cups \
-				#--without-cups \
+endif
 
 
 override_dh_auto_test:
@@ -37,14 +43,14 @@ override_dh_install:
 	dh_install --fail-missing
 
 	# These files will end up in multiple packages otherwise
-	rm -f debian/wine-devel//opt/wine-devel/bin/wine
-	rm -f debian/wine-devel//opt/wine-devel/bin/wine-preloader
-	rm -f debian/wine-devel//opt/wine-devel/bin/wine64
-	rm -f debian/wine-devel//opt/wine-devel/bin/wine64-preloader
+	rm -f debian/wine-devel/opt/wine-devel/bin/wine
+	rm -f debian/wine-devel/opt/wine-devel/bin/wine-preloader
+	rm -f debian/wine-devel/opt/wine-devel/bin/wine64
+	rm -f debian/wine-devel/opt/wine-devel/bin/wine64-preloader
 
 	# Compat symlinks for bindir
 	mkdir -p debian/winehq-devel/usr/bin
-	for _file in $$(ls "debian/wine-devel//opt/wine-devel/bin"); do \
+	for _file in $$(ls "debian/wine-devel/opt/wine-devel/bin"); do \
 		ln -s "/opt/wine-devel/bin/$$_file" "debian/winehq-devel/usr/bin/$$_file"; \
 	done
 	for _file in wine wine-preloader; do \
@@ -58,15 +64,15 @@ endif
 
 	# Compat symlinks for desktop file
 	mkdir -p "debian/winehq-devel/usr/share/applications"
-	for _file in $$(ls "debian/wine-devel//opt/wine-devel/share/applications"); do \
+	for _file in $$(ls "debian/wine-devel/opt/wine-devel/share/applications"); do \
 		ln -s "/opt/wine-devel/share/applications/$$_file" "debian/winehq-devel/usr/share/applications/$$_file"; \
 	done
 
 	# Compat manpages
 	for _dir in man1 de.UTF-8/man1 fr.UTF-8/man1 pl.UTF-8/man1; do \
 		mkdir -p "debian/winehq-devel/usr/share/man/$$_dir"; \
-		if [ -d "debian/wine-devel//opt/wine-devel/share/man/$$_dir" ]; then \
-			for _file in $$(ls "debian/wine-devel//opt/wine-devel/share/man/$$_dir"); do \
+		if [ -d "debian/wine-devel/opt/wine-devel/share/man/$$_dir" ]; then \
+			for _file in $$(ls "debian/wine-devel/opt/wine-devel/share/man/$$_dir"); do \
 				ln -s "/opt/wine-devel/share/man/$$_dir/$$_file" "debian/winehq-devel/usr/share/man/$$_dir/$$_file"; \
 			done; \
 		fi; \
@@ -74,13 +80,11 @@ endif
 	done
 
 	# Generate list of recommendations
-ifeq ($(DEB_HOST_ARCH),amd64)
-	./debian/recommendations.sh "-m64" "include/config.h" "debian/wine-devel-amd64.substvars"
-else ifeq ($(DEB_HOST_ARCH),armhf)
-	./debian/recommendations.sh "-m32" "include/config.h" "debian/wine-devel-arm.substvars"
-else
-	./debian/recommendations.sh "-m32" "include/config.h" "debian/wine-devel-i386.substvars"
-endif
+# ifeq ($(DEB_HOST_ARCH),amd64)
+# 	./debian/recommendations.sh "-m64" "include/config.h" "debian/wine-devel-amd64.substvars"
+# else
+# 	./debian/recommendations.sh "-m32" "include/config.h" "debian/wine-devel-i386.substvars"
+# endif
 
 
 override_dh_strip:
@@ -89,7 +93,7 @@ override_dh_strip:
 
 override_dh_shlibdeps:
 ifeq ($(DEB_HOST_ARCH),amd64)
-	dh_shlibdeps -l $(CURDIR)/debian/tmp//opt/wine-devel/lib64/
+	dh_shlibdeps -l $(CURDIR)/debian/tmp/opt/wine-devel/lib64/
 else
-	dh_shlibdeps -l $(CURDIR)/debian/tmp//opt/wine-devel/lib/
+	dh_shlibdeps -l $(CURDIR)/debian/tmp/opt/wine-devel/lib/
 endif
