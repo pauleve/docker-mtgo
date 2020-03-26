@@ -3,7 +3,7 @@ TIMESTAMP=$(shell date +%F)
 
 BASE=panard/mtgo:$(TIMESTAMP)
 
-DOCKER=sudo docker
+DOCKER=docker
 
 image:
 	make -C docker-wine $(shell grep FROM Dockerfile|cut -d: -f2)

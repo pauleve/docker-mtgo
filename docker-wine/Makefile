@@ -1,8 +1,8 @@
 
-DOCKER=sudo docker
+DOCKER=docker
 
 custom:
-	$(DOCKER) pull i386/debian:stable-slim
+	$(DOCKER) pull i386/debian:testing-slim
 	$(DOCKER) build -t panard/wine:$@ -f Dockerfile .
 
 

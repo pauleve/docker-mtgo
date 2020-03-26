@@ -1,4 +1,4 @@
-FROM i386/debian:stable-slim as builder
+FROM i386/debian:testing-slim as builder
 MAINTAINER Panard <panard@inzenet.org>
 
 ENV DEBIAN_FRONTEND noninteractive
@@ -22,7 +22,7 @@ RUN for p in *.patch; do patch -p1 < $p; done
 RUN debuild --no-lintian -us -uc -b -j7
 RUN rm -v /usr/src/wine-$WINE_DIST-d*
 
-FROM i386/debian:stable-slim
+FROM i386/debian:testing-slim
 MAINTAINER Panard <panard@inzenet.org>
 ENV DEBIAN_FRONTEND noninteractive
 ENV WINEARCH win32
