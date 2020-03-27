@@ -35,9 +35,9 @@ jobs:
         with:
           token: ${{ secrets.PAT }}
           commit-message: Update wine to ${{ steps.wine.outputs.release_tag }}
-          title: Update wine to ≥${{ steps.wine.outputs.release_tag }}
+          title: Update wine to ${{ steps.wine.outputs.release_tag }}
           body: |
-              Updates wine to ≥${{ steps.wine.outputs.release_tag }}
+              Updates wine to ${{ steps.wine.outputs.release_tag }}
 
               ```
               ./run-mtgo --update --test panard/mtgo:pr<#ID>
