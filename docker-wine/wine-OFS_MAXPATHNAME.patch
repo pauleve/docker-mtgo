@@ -1,0 +1,12 @@
+diff -ur wine-wine-5.4/include/winbase.h wine-wine-5.4.b/include/winbase.h
+--- wine-wine-5.4/include/winbase.h	2020-03-13 21:23:09.000000000 +0100
++++ wine-wine-5.4.b/include/winbase.h	2020-03-27 22:38:59.988126472 +0100
+@@ -163,7 +163,7 @@
+ typedef LONG (CALLBACK *PTOP_LEVEL_EXCEPTION_FILTER)(PEXCEPTION_POINTERS);
+ typedef PTOP_LEVEL_EXCEPTION_FILTER LPTOP_LEVEL_EXCEPTION_FILTER;
+ 
+-#define OFS_MAXPATHNAME 128
++#define OFS_MAXPATHNAME 256
+ typedef struct _OFSTRUCT
+ {
+     BYTE cBytes;
