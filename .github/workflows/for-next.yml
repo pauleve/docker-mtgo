@@ -2,7 +2,7 @@ name: sync for-next
 on:
     push:
         branches:
-            - master
+            - masterx
 jobs:
     rebase-for-next:
         runs-on: ubuntu-latest
