@@ -46,3 +46,5 @@ RUN cd .wine && mkdir host \
     && ln -s host/*.reg .
 
 COPY extra/host-webbrowser /usr/local/bin/xdg-open
+COPY extra/PAUSE.wav /opt/mtgo/PAUSE.wav
+COPY extra/mtgo-replace-sounds.sh /opt/mtgo/
