@@ -25,7 +25,6 @@ if $do_sound; then
     run winetricks ${commontricks} sound=pulse winegstreamer=builtin
 else
     run winetricks ${commontricks} sound=disabled winegstreamer=disabled
-    bash /opt/mtgo/mtgo-replace-sounds.sh /opt/mtgo/PAUSE.wav
 fi
 $do_winecfg && (run winecfg ; run wineserver -kw; sleep 1)
 
