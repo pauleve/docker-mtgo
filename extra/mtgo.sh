@@ -24,7 +24,7 @@ if $do_sound; then
     gst-inspect-1.0 # seems to help avoiding wine crash when loading gstreamer
     run winetricks ${commontricks} sound=pulse winegstreamer=builtin
 else
-    run winetricks ${commontricks} sound=disabled winegstreamer=disabled
+    run winetricks ${commontricks} sound=disabled winegstreamer=disabled wmp=disabled
 fi
 $do_winecfg && (run winecfg ; run wineserver -kw; sleep 1)
 
