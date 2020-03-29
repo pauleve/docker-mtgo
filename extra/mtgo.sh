@@ -18,9 +18,6 @@ run() {
     "${@}"
 }
 
-curl -fOL https://raw.githubusercontent.com/pauleve/docker-mtgo/master/extra/mtgo-no-startupsound.sh
-bash mtgo-no-startupsound.sh
-
 commontricks="gdiplus=native"
 
 if $do_sound; then
