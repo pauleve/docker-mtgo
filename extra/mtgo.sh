@@ -35,7 +35,7 @@ run wineboot
 
 run wine /opt/mtgo/mtgo.exe
 started=0
-s=1
+s=6
 while :; do
     sleep $s
     pidof MTGO.exe >/dev/null
@@ -43,7 +43,6 @@ while :; do
     if [ $started -eq 0 ] && [ $r -eq 0 ]; then
         echo "====== MTGO.exe has started."
         started=1
-        s=3
     elif [ $started -eq 1 ] && [ $r -eq 1 ]; then
         echo "====== shutting down"
         run wineserver -kw
