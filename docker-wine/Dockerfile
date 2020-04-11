@@ -13,7 +13,7 @@ COPY debian /usr/src/wine/debian
 RUN mk-build-deps -i -r -t "apt-get -y --no-install-recommends" debian/control
 
 ARG WINE_GIT=wine-mirror/wine
-ARG WINE_TAG=wine-5.5
+ARG WINE_TAG=wine-5.6
 RUN curl -L https://github.com/$WINE_GIT/archive/$WINE_TAG.tar.gz \
     | tar xz --strip-components 1
 
