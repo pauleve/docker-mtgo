@@ -2,8 +2,7 @@ name: Docker Image CI
 
 on:
   pull_request:
-      types:
-          - synchronize
+      types: [opened, synchronize, reopened]
 
 jobs:
   validate:
