@@ -1,8 +1,12 @@
 #!/usr/bin/make -f
 
+export DEB_CFLAGS_MAINT_STRIP = -fstack-protector-strong -fcf-protection=full
+
 # Prefer gcc-4.5, then 4.7, then 4.9 - otherwise fallback to gcc.
 export CC = $(shell for _cc in gcc-4.5 gcc-4.7 gcc-4.9 gcc false; do \
 		if which "$$_cc" >/dev/null 2>&1; then echo "$$_cc"; break; fi; done)
+
+# export CC = gcc -fcf-protection=none -fno-stack-protector
 
 %:
 	dh $@ --parallel

@@ -1,0 +1,9 @@
+Template: wine/setcaps
+Type: boolean
+Default: false
+Description: Allow ordinary users to run applications in Wine that send/receive raw IP packets?
+ Some applications need to send/receive raw IP packets, which on Linux requires
+ either a privileged user or the CAP_NET_RAW capability.
+ By answering yes to this question, the Wine binaries will be installed with CAP_NET_RAW 
+ capability enabled. This will allow the applications that need it to function correctly,
+ but is a potential security risk.

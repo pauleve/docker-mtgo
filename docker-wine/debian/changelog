@@ -1,8 +1,11 @@
-wine (5.0) unstable; urgency=low
+wine (5.8~buster) UNRELEASED; urgency=low
 
   * version number update by debtransform
 
- -- debtransform <build@opensuse.org>  Sat, 28 Dec 2019 01:44:09 +0000
+ -- debtransform <build@opensuse.org>  Sat, 09 May 2020 00:25:09 +0000
 
-    
+wine (5.8) UNRELEASED; urgency=low
 
+ * Update to 5.8 development release.  Fri, 08 May 2020 15:44:46 -0500
+ 
+ -- Rosanne DiMesio <dimesio@earthlink.net>
