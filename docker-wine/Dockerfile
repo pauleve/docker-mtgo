@@ -1,4 +1,4 @@
-FROM i386/debian:testing as builder
+FROM i386/debian:buster as builder
 
 ENV DEBIAN_FRONTEND noninteractive
 
@@ -24,7 +24,7 @@ COPY debian /usr/src/wine/debian
 RUN debuild --no-lintian -us -uc -b -j7
 RUN rm -v /usr/src/wine-$WINE_DIST-d*
 
-FROM i386/debian:testing-slim
+FROM i386/debian:buster-slim
 ENV DEBIAN_FRONTEND noninteractive
 ENV WINEARCH win32
 
