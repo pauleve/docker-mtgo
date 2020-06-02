@@ -1,5 +1,7 @@
 # MTGO docker image
 
+ <a title="Docker Hub" href="https://hub.docker.com/r/panard/mtgo"><img src="https://img.shields.io/docker/pulls/panard/mtgo.svg?longCache=true&style=flat-square&logo=docker&logoColor=fff"></a>
+
 This image provides a ready-to-play Magic The Gathering Online (MTGO) for Linux
 and macOS.
 
