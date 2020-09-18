@@ -9,7 +9,7 @@ RUN useradd -u $WINE_UID -d /home/wine -m -s /bin/bash $WINE_USER
 WORKDIR /home/wine
 
 # Winetricks
-ARG WINETRICKS_VERSION=20200412
+ARG WINETRICKS_VERSION=master
 ADD https://raw.githubusercontent.com/Winetricks/winetricks/$WINETRICKS_VERSION/src/winetricks /usr/local/bin/winetricks
 RUN chmod 755 /usr/local/bin/winetricks
 
@@ -19,17 +19,16 @@ RUN apt-get update \
         ca-certificates \
         curl \
         cabextract \
-        xauth \
-        xvfb \
-    && su - $WINE_USER -c 'wineboot -i' \
-    && su - $WINE_USER -c 'xvfb-run -a taskset -c 0 winetricks -q corefonts dotnet46 win7' \
-    && su - $WINE_USER -c 'xvfb-run -a winetricks -q gdiplus gdiplus=native' \
-    && su - $WINE_USER -c 'winetricks sound=disabled ddr=gdi'\
-    && su - $WINE_USER -c 'wineboot -s' \
-    && rm -rf /home/wine/.cache \
-    && apt remove -y --purge xauth xvfb \
     && apt autoremove -y --purge \
     && apt clean -y && rm -rf /var/lib/apt/lists/*
+
+RUN su - $WINE_USER -c 'wineboot -i' \
+    && su - $WINE_USER -c 'winetricks -q gdiplus gdiplus=native' \
+    && su - $WINE_USER -c 'winetricks -q corefonts' \
+    && su - $WINE_USER -c 'taskset -c 0 winetricks -f -q dotnet46' \
+    && su - $WINE_USER -c 'winetricks win7 sound=alsa ddr=gdi'\
+    && su - $WINE_USER -c 'wineboot -s' \
+    && rm -rf /home/wine/.cache
 
 ENV WINEDEBUG -all,err+all
 
