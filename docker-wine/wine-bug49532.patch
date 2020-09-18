@@ -1,0 +1,28 @@
+From ff80f4a9a20372d989506e6de1914fa85433de4f Mon Sep 17 00:00:00 2001
+From: Paul Gofman <pgofman@codeweavers.com>
+Date: Fri, 11 Sep 2020 01:12:30 +0300
+Subject: [PATCH] ntdll: Add SIGQUIT to server block set.
+
+Receiving SIGQUIT for forced thread termination may leave sync
+objects (like virtual_mutex) locked.
+
+Wine-Bug: https://bugs.winehq.org/show_bug.cgi?id=49532
+---
+ dlls/ntdll/unix/server.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/dlls/ntdll/unix/server.c b/dlls/ntdll/unix/server.c
+index cadbbe70a25..ac250c5d9d8 100644
+--- a/dlls/ntdll/unix/server.c
++++ b/dlls/ntdll/unix/server.c
+@@ -1432,6 +1432,7 @@ void server_init_process(void)
+     sigaddset( &server_block_set, SIGUSR1 );
+     sigaddset( &server_block_set, SIGUSR2 );
+     sigaddset( &server_block_set, SIGCHLD );
++    sigaddset( &server_block_set, SIGQUIT );
+     pthread_sigmask( SIG_BLOCK, &server_block_set, NULL );
+ 
+     /* receive the first thread request fd on the main socket */
+-- 
+2.26.2
+
