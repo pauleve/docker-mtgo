@@ -33,6 +33,9 @@ COPY --from=builder /usr/src/*.deb /usr/src/
 ENV WINE_DIST devel
 RUN apt-get update && \
     apt install -y --no-install-recommends \
+        libxcomposite1 \
+        libxinerama1 \
+        libxrandr2 \
         /usr/src/wine-${WINE_DIST}-i386_*_i386.deb \
         /usr/src/wine-${WINE_DIST}_*_i386.deb \
         /usr/src/winehq-${WINE_DIST}_*_i386.deb && \
