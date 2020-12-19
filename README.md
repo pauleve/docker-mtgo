@@ -7,7 +7,7 @@ and macOS.
 
 Join the "WineHQ Players" clan! (Account > Buddies, Clan, Chat > Look for WineHQ Players and contact the captain, or send a mail to panard at inzenet dot org with your MTGO user name)
 
-It is based on [i386/debian:testing-slim](https://hub.docker.com/r/i386/debian/) and wine 5.17.
+It is based on [i386/debian:testing-slim](https://hub.docker.com/r/i386/debian/) and wine 6.0-rc3.
 
 See https://appdb.winehq.org/objectManager.php?sClass=version&iId=32007 for more information.
 
