@@ -11,7 +11,7 @@ COPY debian/control /tmp/control
 RUN mk-build-deps -i -r -t "apt-get -y --no-install-recommends" /tmp/control
 
 ARG WINE_GIT=wine-mirror/wine
-ARG WINE_TAG=wine-5.17
+ARG WINE_TAG=wine-6.0-rc5
 ARG WINE_DIST=devel
 
 RUN curl -L https://github.com/$WINE_GIT/archive/$WINE_TAG.tar.gz \
