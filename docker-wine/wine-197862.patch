@@ -1,0 +1,39 @@
+From: "Jiajin Cui" <cuijiajin@uniontech.com>
+Subject: [PATCH] winex11.drv: Make Update _NET_WM_STATE before replaces the size hints for the WM_NORMAL_HINTS property.
+Message-Id: <202101071138031324195@uniontech.com>
+Date: Thu, 7 Jan 2021 11:38:03 +0800
+
+From 1c36e284b4edd050a3fcda893425be35aa3643cb Mon Sep 17 00:00:00 2001
+From: Jiajin Cui <cuijiajin@uniontech.com>
+Date: Thu, 7 Jan 2021 10:21:24 +0800
+Subject: [PATCH] winex11.drv: Make Update _NET_WM_STATE before replaces the
+ size hints for the WM_NORMAL_HINTS property.
+
+For windows without WS_THICKFRAME style, _NET_WM_STATE must be set first,
+otherwise _NET_WM_STATE_MAXIMIZED_VERT and _NET_WM_STATE_MAXIMIZED_HORZ
+cannot be removed when the window is restored to normal.
+
+Signed-off-by: Jiajin Cui <cuijiajin@uniontech.com>
+---
+ dlls/winex11.drv/window.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/dlls/winex11.drv/window.c b/dlls/winex11.drv/window.c
+index baaa30d74e3..8d9483646d1 100644
+--- a/dlls/winex11.drv/window.c
++++ b/dlls/winex11.drv/window.c
+@@ -1306,9 +1306,9 @@ static void sync_window_position( struct x11drv_win_data *data,
+         /* and Above with a sibling doesn't work so well either, so we ignore it */
+     }
+ 
++    update_net_wm_states( data );
+     set_size_hints( data, style );
+     set_mwm_hints( data, style, ex_style );
+-    update_net_wm_states( data );
+     data->configure_serial = NextRequest( data->display );
+     XReconfigureWMWindow( data->display, data->whole_window, data->vis.screen, mask, &changes );
+ #ifdef HAVE_LIBXSHAPE
+
+-- 
+2.20.1
+
