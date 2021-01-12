@@ -1,0 +1,42 @@
+From: Haoyang Chen <chenhaoyang@uniontech.com>
+Subject: [PATCH v3] user32: Send the WM_NCCALCSIZE message with wparam TRUE when creating a window.
+Message-Id: <f458d248-9467-923a-aa10-67e733a9dffe@uniontech.com>
+Date: Thu, 31 Dec 2020 16:57:59 +0800
+In-Reply-To: <15d8bc51-948b-cab6-5619-26600eb2a009@uniontech.com>
+References: <677b4b0d-58c6-37d0-b67d-3caedba3753c@uniontech.com> <15d8bc51-948b-cab6-5619-26600eb2a009@uniontech.com>
+
+From e68c919f202e641e4944eaaa0a6ef781a5f601e6 Mon Sep 17 00:00:00 2001
+From: Haoyang Chen <chenhaoyang@uniontech.com>
+Date: Thu, 31 Dec 2020 16:40:52 +0800
+Subject: [PATCH] user32: Send the WM_NCCALCSIZE message with wparam TRUE when
+ creating a window.
+
+If the application processes the WM_NCCALCSIZE message with wparam TRUE
+to re-size the client/non-client area, the drawing of the client and
+non-client areas is abnormal.
+
+Signed-off-by: Haoyang Chen <chenhaoyang@uniontech.com>
+---
+ dlls/user32/win.c | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/dlls/user32/win.c b/dlls/user32/win.c
+index 680defc2071..f4f2c76d8b7 100644
+--- a/dlls/user32/win.c
++++ b/dlls/user32/win.c
+@@ -1717,6 +1717,11 @@ HWND WIN_CreateWindowEx( CREATESTRUCTW *cs, LPCWSTR className, HINSTANCE module,
+             /* ShowWindow won't activate child windows */
+             SetWindowPos( hwnd, HWND_TOP, 0, 0, 0, 0, SWP_SHOWWINDOW | SWP_NOMOVE | SWP_NOSIZE );
+         }
++
++        /* Send wparam is TRUE WM_NCCALCSIZE message to update the window rectangle */
++        if (sw == SW_SHOW && cs->style & WS_CAPTION)
++            SetWindowPos( hwnd, 0, rect.left, rect.top, rect.right - rect.left,
++                    rect.bottom - rect.top, SWP_NOACTIVATE|SWP_FRAMECHANGED);
+     }
+ 
+     /* Call WH_SHELL hook */
+
+-- 
+2.20.1
+
