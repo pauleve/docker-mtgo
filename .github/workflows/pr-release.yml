@@ -28,7 +28,7 @@ jobs:
               with:
                   args: pull $BASENAME:$PR_TAG
             - name: automerge
-              uses: pascalgn/automerge-action@master
+              uses: pascalgn/automerge-action@0.14.2
               env:
                   GITHUB_TOKEN: ${{ secrets.PAT }}
                   MERGE_LABELS: ""
