@@ -11,15 +11,12 @@ jobs:
     steps:
       - uses: actions/checkout@v1
       - run: make image DOCKER=docker BASE=$IMAGE
-        if: contains(github.event.pull_request.labels.*.name, 'autodocker')
       - name: Login to docker hub
-        if: contains(github.event.pull_request.labels.*.name, 'autodocker')
         uses: actions-hub/docker/login@master
         env:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
       - name: Push image
-        if: contains(github.event.pull_request.labels.*.name, 'autodocker')
         uses: actions-hub/docker@master
         with:
             args: push $IMAGE
