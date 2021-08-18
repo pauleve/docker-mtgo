@@ -19,6 +19,9 @@ RUN apt-get update \
         ca-certificates \
         curl \
         cabextract \
+        ffmpeg \
+        libgl1-mesa-glx \
+        winbind \
     && apt autoremove -y --purge \
     && apt clean -y && rm -rf /var/lib/apt/lists/*
 
