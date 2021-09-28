@@ -40,7 +40,7 @@ Support for macOS is still under test.
 Using [Homebrew](https://brew.sh/), install XQuartz, socat, and the GNU version of getopt.
 
 ```
-brew cask install xquartz
+brew install xquartz
 brew install socat
 brew install gnu-getopt
 brew install wget
