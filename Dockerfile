@@ -8,6 +8,9 @@ ENV WINEPREFIX /home/wine/.wine
 RUN useradd -u $WINE_UID -d /home/wine -m -s /bin/bash $WINE_USER
 WORKDIR /home/wine
 
+COPY extra/host-webbrowser /usr/local/bin/xdg-open
+COPY extra/live-mtgo /usr/local/bin/live-mtgo
+
 # Winetricks
 ARG WINETRICKS_VERSION=master
 ADD https://raw.githubusercontent.com/Winetricks/winetricks/$WINETRICKS_VERSION/src/winetricks /usr/local/bin/winetricks
@@ -44,4 +47,3 @@ RUN cd .wine && mkdir host \
     && mv user.reg system.reg host/ \
     && ln -s host/*.reg .
 
-COPY extra/host-webbrowser /usr/local/bin/xdg-open
