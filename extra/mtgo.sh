@@ -33,6 +33,9 @@ run wineboot
 # workaround EULA picture
 #find ~/.wine/drive_c/ -name 'EULA_en.rtf' -exec sed '/^{\\pict/,/^}/ d' -i "{}" \;
 
+# workaround cert verification crash (wine 6.19)
+mkdir -pv ~/.wine/host/wine/AppData/LocalLow
+
 run wine /opt/mtgo/mtgo.exe
 started=0
 s=6
