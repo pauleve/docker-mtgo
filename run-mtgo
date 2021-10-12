@@ -111,11 +111,20 @@ case "${1:-}" in
         opts="${opts} $1 $2" ;;
      --) shift ; shift
         if [ -n "${1:-}" ]; then
+            while [ -n "${2}" ]; do
+                opts="${opts} ${1}"
+                shift
+            done
             image=$1
         fi ;;
 esac
 shift
 done
+
+echo "IMAGE=${image}"
+if [ -n "${opts}" ]; then
+    echo "CUSTOM DOCKER OPTS=${opts}"
+fi
 
 run() {
     echo "${@}"
