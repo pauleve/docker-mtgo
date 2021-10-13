@@ -36,6 +36,20 @@ run wineboot
 # workaround cert verification crash (wine 6.19)
 mkdir -pv ~/.wine/host/wine/AppData/LocalLow
 
+workaround_dotnet() {
+    D="/home/wine/.wine/drive_c/windows/Microsoft.NET/Framework/v4.0.30319"
+    F="mscoreei.dll"
+    if [ ! -f "${D}/${F}" ]; then
+        echo "THERE IS AN ISSUE WITH DOTNET!"
+        echo "Trying to fix it..., wait a moment"
+        run wineserver -k
+        cd ${D}
+        run curl -fOL https://github.com/pauleve/docker-mtgo/raw/master/extra/mscoreei.dll
+        return 1
+    fi
+}
+workaround_dotnet
+
 run wine /opt/mtgo/mtgo.exe
 started=0
 s=6
