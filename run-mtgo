@@ -127,7 +127,7 @@ if [ -n "${opts}" ]; then
 fi
 
 run() {
-    echo "${@}"
+    echo "run(): ${@}" >&2
     if $do_run; then
         "${@}"
     fi
@@ -135,10 +135,10 @@ run() {
 
 _host_uid=$(id -u)
 if [[ ${_host_uid} == 0 ]]; then
-    echo "Error: you should not run this script as root."
-    echo "Instead, consider adding your user to the 'docker' group:"
-    echo "    sudo usermod -aG docker \$USER"
-    echo "then restarting your session."
+    echo "Error: you should not run this script as root." >&2
+    echo "Instead, consider adding your user to the 'docker' group:" >&2
+    echo '    sudo usermod -aG docker \$USER' >&2
+    echo "then restarting your session." >&2
     exit 1
 fi
 
@@ -158,20 +158,22 @@ fi
 if $do_reset; then
     msg="You are about to delete ${local_data}"
     msg="${msg} and wipe docker volume ${data}"
-    echo "WARNING: $msg"
-    echo "Press Enter to continue, CTRL+C to abort"
+    echo "WARNING: $msg" >&2
+    echo "Press Enter to continue, CTRL+C to abort" >&2
     read
     rm -vrf "${local_data}"
     run docker volume rm $data
 fi
+
 if $do_update; then
+    echo "Updating image ${image}..." >&2
     run docker pull ${image}
 fi
 
-docker volume inspect $data >/dev/null 2>&1
+docker volume inspect "$data" >/dev/null 2>&1
 if [ $? -ne 0 ]; then
 	set -e
-	run docker volume create ${data}
+	run docker volume create "${data}"
 
 	# migration
 	old_data=mtgo-data
@@ -179,7 +181,7 @@ if [ $? -ne 0 ]; then
 	docker volume inspect ${old_data}>/dev/null 2>&1
 	if [ $? -eq 0 ]; then
 		set -e
-		echo "Migrating from previous configuration..."
+		echo "Migrating from previous configuration..." >&2
 		run docker run --rm -v ${data}:/home/wine/.wine/host \
             -v ${old_data}:/data \
             -v ${local_data}:/ldata \
@@ -196,8 +198,8 @@ EOF
 fi
 set -e
 
-if [ ! -d ${local_data} ]; then
-    mkdir -p ${local_data}
+if [ ! -d "${local_data}" ]; then
+    mkdir -p "${local_data}"
 fi
 
 opts="${opts} -v ${data}:/home/wine/.wine/host/"
@@ -206,14 +208,14 @@ opts="${opts} -v ${data}:/home/wine/.wine/drive_c/users/"
 reset_xhost=false
 if [[ ${OSTYPE} == darwin* ]]; then
     iface=$(route -n get 0.0.0.0 2>/dev/null | awk '/interface: / {print $2}')
-    echo "Using network interface '${iface}'"
+    echo "Using network interface '${iface}'" >&2
     ip=$(ifconfig $iface | grep inet | awk '$1=="inet" {print $2}')
     if [ -z ${ip} ]; then
-        echo "Cannot find your local IP address (iface=$iface)."
+        echo "FATAL: Cannot find your local IP address (iface=$iface)." >&2
         exit 1
     fi
     run open -a XQuartz
-    echo "socat on $ip forwarding to $DISPLAY"
+    echo "socat on $ip forwarding to $DISPLAY" >&2
     socat TCP4-LISTEN:6000,bind=$ip,range=$ip/32,reuseaddr,fork UNIX-CLIENT:\"$DISPLAY\" &
     socat_pid=$!
     sleep 2
@@ -237,21 +239,21 @@ fi
 if $do_sound; then
     if [[ ${OSTYPE} == darwin* ]]; then
         set +e
-        pulseaudio --version>/dev/null
+        pulseaudio --version >/dev/null 2>&1
         if [ $? -ne 0 ]; then
-            echo "PulseAudio does not seem to be installed."
+            echo "PulseAudio does not seem to be installed.  Attempting install..." >&2
             run brew install pulseaudio
         fi
         set -e
         pascript="$(pulseaudio --dump-conf|grep '^default-script-file = '|sed 's/^.*= *//')"
-        echo $pascript
+        echo "PAScript is $pascript" >&2
         pa_modified=false
         set +e
         pa_has_esound=$(grep "^load-module module-esound-protocol-tcp" "${pascript}")
         pa_has_native=$(grep "^load-module module-native-protocol-tcp" "${pascript}")
         set -e
         pa_enable_module() {
-            echo "PulseAudio: enabling $1 module"
+            echo "PulseAudio: enabling $1 module" >&2
             echo "load-module module-$1" | sudo tee -a "${pascript}"
         }
         if [ -z "${pa_has_esound}" ]; then
@@ -269,7 +271,7 @@ if $do_sound; then
     else
         _host_pulse="/run/user/${_host_uid}/pulse/native"
         if [ ! -S $_host_pulse ]; then
-            echo "PulseAudio does not seem active (${_host_pulse} not found)"
+            echo "PulseAudio does not seem active (${_host_pulse} not found)" >&2
             run pulseaudio --start
         fi
         opts="${opts} -i -v ${_host_pulse}:/run/user/1000/pulse/native"
@@ -290,8 +292,8 @@ docker_mtgo() {
         ${opts} ${image} ${cmd} ${cmdargs}
 }
 watch_openurl() {
-    while read line; do
-        echo $line
+    while read -r line; do
+        echo "$line"
         if [[ "${line:0:8}" == "OPENURL " ]]; then
             url="${line:8}"
             run $WEBBROWSER "${url}"
