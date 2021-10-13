@@ -98,10 +98,7 @@ You need to logout/login for the changes to take effect.
 
 * `run-mtgo` asks me to install .NET:
 
-First, exit with <kbd>Ctrl</kbd>+<kbd>C</kbd>, then
-```
-./run-mtgo --reset
-```
+See https://github.com/pauleve/docker-mtgo/issues/130#issuecomment-942368548
 
 * `run-mtgo` never exits, even after <kbd>Ctrl</kbd>+<kbd>C</kbd>:
 ```
