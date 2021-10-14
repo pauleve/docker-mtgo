@@ -7,7 +7,7 @@ and macOS.
 
 Join the "WineHQ Players" clan! (Account > Buddies, Clan, Chat > Look for WineHQ Players and contact the captain, or send a mail to panard at inzenet dot org with your MTGO user name)
 
-It is based on [i386/debian:testing-slim](https://hub.docker.com/r/i386/debian/) and wine 6.19.
+It is based on [i386/debian:stable-slim](https://hub.docker.com/r/i386/debian/) and wine 6.19.
 
 See https://appdb.winehq.org/objectManager.php?sClass=version&iId=32007 for more information.
 
@@ -96,13 +96,17 @@ sudo usermod -aG docker $USER
 ```
 You need to logout/login for the changes to take effect.
 
-* `run-mtgo` asks me to install .NET:
-
-See https://github.com/pauleve/docker-mtgo/issues/130#issuecomment-942368548
-
 * `run-mtgo` never exits, even after <kbd>Ctrl</kbd>+<kbd>C</kbd>:
 ```
 docker kill mtgo_running
+```
+
+* Poor performance on Linux (game hangs regularly)
+
+If you are using an Nvidia graphics card, check https://github.com/pauleve/docker-mtgo/issues/132
+Alternatively try
+```
+./run-mtgo panard/mtgo:wine-4.9
 ```
 
 
