@@ -116,6 +116,7 @@ case "${1:-}" in
                 shift
             done
             image=$1
+            do_update=true
         fi ;;
 esac
 shift
