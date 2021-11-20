@@ -47,9 +47,14 @@ lopts="${lopts},update"
 lopts="${lopts},debug"
 
 getopt=getopt
-brew_getopt="/usr/local/opt/gnu-getopt/bin/getopt"
-if [[ $OSTYPE == darwin* ]] && [ -x $brew_getopt ]; then
-    getopt=$brew_getopt
+if [[ $OSTYPE == darwin* ]]; then
+    for d in "/opt/homebrew/opt/gnu-getopt/bin" "/usr/local/opt/gnu-getopt/bin"; do
+        brew_getopt="${d}/getopt"
+        if [ -x $brew_getopt ]; then
+            getopt=$brew_getopt
+            break
+        fi
+    done
 fi
 
 args="$($getopt -n "${0}" -o hv:u:e: --longoptions $lopts -- "${0}" "${@}")"
