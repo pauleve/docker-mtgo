@@ -49,7 +49,7 @@ lopts="${lopts},debug"
 getopt=getopt
 if [[ $OSTYPE == darwin* ]]; then
     set -x
-    brew_getopt="$(brew ls --verbose gnu-getopt|grep '/bin/getopt')"
+    getopt="$(brew ls --verbose gnu-getopt|grep '/bin/getopt')"
     if [ $? -ne 0 ]; then
         for d in "/opt/homebrew/opt/gnu-getopt/bin" "/usr/local/opt/gnu-getopt/bin"; do
             brew_getopt="${d}/getopt"
