@@ -55,7 +55,7 @@ started=0
 s=6
 while :; do
     sleep $s
-    pidof MTGO.exe >/dev/null
+    winedbg --command "info proc"|grep MTGO.exe >/dev/null
     r=$?
     if [ $started -eq 0 ] && [ $r -eq 0 ]; then
         echo "====== MTGO.exe has started."
