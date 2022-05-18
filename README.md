@@ -88,6 +88,11 @@ for other options.
 
 ## Troubleshooting
 
+* `run-mtgo` prompt for .NET installation:
+```
+./run-mtgo --reset # only once
+```
+
 * `run-mtgo` got permission denied while trying to connect to the Docker daemon socket:
 
 Add yourself to the docker group:
