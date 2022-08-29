@@ -11,9 +11,10 @@ It is based on [i386/debian:stable-slim](https://hub.docker.com/r/i386/debian/) 
 
 See https://appdb.winehq.org/objectManager.php?sClass=version&iId=32007 for more information.
 
+You can buy me a beer using either
+- Github ![Github-sponsors](https://img.shields.io/badge/sponsor-30363D?style=for-the-badge&logo=GitHub-Sponsors&logoColor=#EA4AAA)
+- Paypal [![Donate](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=Y27XTWGY3ZZFY)
 
-[![Donate](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=Y27XTWGY3ZZFY)
-[![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.me/loicpauleve)
 
 ## Installation
 
