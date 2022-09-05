@@ -92,6 +92,7 @@ case "${1:-}" in
     --sound)
         [[ "$cmd" == "mtgo" ]] && cmdargs="${cmdargs} $1"
         image=panard/mtgo:sound
+        do_update=true
         do_sound=true ;;
     --disable-sound)
         [[ "$cmd" == "mtgo" ]] && cmdargs="${cmdargs} $1" ;;
