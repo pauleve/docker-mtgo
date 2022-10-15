@@ -3,6 +3,7 @@
 defaultcmd="mtgo"
 
 image=panard/mtgo:latest
+limit_cpus=4
 name=mtgo_running
 cmd=$defaultcmd
 cmdargs=""
@@ -32,6 +33,7 @@ Options:
     --debug             enable debug information
     --test              test environment
     --update            update docker image before run
+    --limit-cpus N       limit number of CPUs (first N will be used)
     -e                  docker run option (environment)
     -v                  docker run option (mount volume)
     -u                  docker run option (change user)
@@ -42,6 +44,7 @@ lopts="dry-run,help,winecfg,shell,cmd:,name:"
 lopts="${lopts},data-volume:,reset"
 lopts="${lopts},sound,disable-sound"
 lopts="${lopts},test"
+lopts="${lopts},limit-cpus"
 lopts="${lopts},no-tz"
 lopts="${lopts},update"
 lopts="${lopts},debug"
@@ -96,6 +99,8 @@ case "${1:-}" in
         do_sound=true ;;
     --disable-sound)
         [[ "$cmd" == "mtgo" ]] && cmdargs="${cmdargs} $1" ;;
+    --limit-cpus) shift
+        limit_cpus="$1" ;;
     --reset)
         do_reset=true ;;
     --shell)
@@ -296,6 +301,10 @@ fi
 
 if [ -n "${name}" ]; then
     opts="${opts} --name ${name}"
+fi
+
+if [ ${limit_cpus} -gt 0 ]; then
+    opts="${opts} --cpuset-cpus 0-$(( ${limit_cpus} - 1 ))"
 fi
 
 docker_mtgo() {
