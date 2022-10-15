@@ -119,4 +119,13 @@ Alternatively try
 ## FAQ
 
 * [Change game resolution](https://github.com/pauleve/docker-mtgo/issues/12#issuecomment-355844711)
-* [Access host files](https://github.com/pauleve/docker-mtgo/issues/11#issuecomment-355766306) (import/export decks)
+
+### Import/export deck files
+
+Assuming your decks are in the `~/mtgo` folder, you can use
+```
+./run-mtgo --bind ~/mtgo
+```
+to have access to this folder from the Docker mtgo as the `Documents` folder.
+
+See also [Access host files](https://github.com/pauleve/docker-mtgo/issues/11#issuecomment-355766306)

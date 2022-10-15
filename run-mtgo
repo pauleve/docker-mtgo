@@ -5,7 +5,6 @@ defaultcmd="mtgo"
 image=panard/mtgo:latest
 limit_cpus=4
 name=mtgo_running
-bind_documents=""
 cmd=$defaultcmd
 cmdargs=""
 opts=""
@@ -14,6 +13,7 @@ do_sound=false
 do_update=false
 
 local_data="$HOME/.local/share/mtgo"
+bind_documents="${local_data}/files"
 
 usage() {
     echo "
@@ -114,7 +114,8 @@ case "${1:-}" in
         opts="${opts} -it" ;;
     --test)
         local_data="$HOME/.local/share/mtgo-test"
-	data="${data}-test"
+        bind_documents="${local_data}/files"
+        data="${data}-test"
         do_test=true ;;
     --cmd) shift;
         cmd="$1"
@@ -177,12 +178,10 @@ if $detect_tz; then
 fi
 
 if $do_reset; then
-    msg="You are about to delete ${local_data}"
-    msg="${msg} and wipe docker volume ${data}"
+    msg="You are about to wipe docker volume ${data}"
     echo "WARNING: $msg" >&2
     echo "Press Enter to continue, CTRL+C to abort" >&2
     read
-    rm -vrf "${local_data}"
     run docker volume rm $data
 fi
 
@@ -221,6 +220,9 @@ set -e
 
 if [ ! -d "${local_data}" ]; then
     mkdir -p "${local_data}"
+fi
+if [ ! -d "${bind_documents}" ]; then
+    mkdir -p "${bind_documents}"
 fi
 
 opts="${opts} -v ${data}:/home/wine/.wine/host/"
