@@ -5,6 +5,7 @@ defaultcmd="mtgo"
 image=panard/mtgo:latest
 limit_cpus=4
 name=mtgo_running
+bind_documents=""
 cmd=$defaultcmd
 cmdargs=""
 opts=""
@@ -33,7 +34,8 @@ Options:
     --debug             enable debug information
     --test              test environment
     --update            update docker image before run
-    --limit-cpus N       limit number of CPUs (first N will be used)
+    --limit-cpus N      limit number of CPUs (first N will be used)
+    --bind PATH         bind given path to the user 'Documents' folder
     -e                  docker run option (environment)
     -v                  docker run option (mount volume)
     -u                  docker run option (change user)
@@ -41,10 +43,11 @@ Options:
 }
 
 lopts="dry-run,help,winecfg,shell,cmd:,name:"
+lopts="${lopts},bind:"
 lopts="${lopts},data-volume:,reset"
 lopts="${lopts},sound,disable-sound"
 lopts="${lopts},test"
-lopts="${lopts},limit-cpus"
+lopts="${lopts},limit-cpus:"
 lopts="${lopts},no-tz"
 lopts="${lopts},update"
 lopts="${lopts},debug"
@@ -84,6 +87,8 @@ fi
 while [ -n "${1:-}" ]; do
 case "${1:-}" in
     --help|-h)  usage && exit 0 ;;
+    --bind) shift
+        bind_documents="$(realpath "$1")" ;;
     --data-volume) shift
         data="$1" ;;
     --debug)
@@ -303,6 +308,9 @@ if [ -n "${name}" ]; then
     opts="${opts} --name ${name}"
 fi
 
+if [ -n "${bind_documents}" ]; then
+    opts="${opts} -v ${bind_documents}:/home/wine/.wine/drive_c/users/wine/Documents"
+fi
 if [ ${limit_cpus} -gt 0 ]; then
     opts="${opts} --cpuset-cpus 0-$(( ${limit_cpus} - 1 ))"
 fi

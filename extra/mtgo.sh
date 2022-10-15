@@ -36,6 +36,8 @@ run wineboot
 # workaround cert verification crash (wine 6.19)
 mkdir -pv ~/.wine/host/wine/AppData/LocalLow
 
+cd ~/.wine/drive_c/
+
 workaround_dotnet() {
     D="/home/wine/.wine/drive_c/windows/Microsoft.NET/Framework/v4.0.30319"
     F="mscoreei.dll"
