@@ -57,6 +57,12 @@ jobs:
               uses: actions-hub/docker@master
               with:
                 args: push $BASENAME:latest
+            - name: Update sound image
+              run: docker build -t $BASENAME:sound sound
+            - name: Push image :sound
+              uses: actions-hub/docker@master
+              with:
+                args: push $BASENAME:sound
     default:
         name: default
         runs-on: ubuntu-latest
