@@ -39,7 +39,7 @@ ENV WINEDEBUG -all,err+all
 
 COPY extra/mtgo.sh /usr/local/bin/mtgo
 
-ADD --chown=wine:wine http://mtgoclientdepot.onlinegaming.wizards.com/setup.exe /opt/mtgo/mtgo.exe
+ADD --chown=wine:wine https://mtgo.patch.daybreakgames.com/patch/mtg/live/client/setup.exe?v=5 /opt/mtgo/mtgo.exe
 
 USER wine
 
