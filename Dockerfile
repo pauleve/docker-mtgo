@@ -48,4 +48,6 @@ USER wine
 RUN cd .wine && mkdir host \
     && mv user.reg system.reg host/ \
     && ln -s host/*.reg .
-
+RUN mkdir -p \
+    /home/wine/.wine/drive_c/users/wine/Documents\
+    /home/wine/.wine/host/wine/Documents
