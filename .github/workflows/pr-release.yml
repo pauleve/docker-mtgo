@@ -18,7 +18,6 @@ jobs:
               run: |
                 echo PR_TAG=pr${{ github.event.pull_request.number }} >> $GITHUB_ENV
                 echo TIMESTAMP=$(date +%F) >> $GITHUB_ENV
-                echo WINE_TAG=$(grep WINE_TAG= docker-wine/Dockerfile|cut -d= -f2) >> $GITHUB_ENV
             - name: Login to docker hub
               uses: actions-hub/docker/login@master
               env:
@@ -41,6 +40,7 @@ jobs:
               run: |
                 git tag $TIMESTAMP
                 git push --tags https://${GITHUB_ACTOR}:${{ secrets.PAT }}@github.com/${GITHUB_REPOSITORY}.git HEAD:master
+                echo WINE_TAG=$(grep WINE_TAG= docker-wine/Dockerfile|cut -d= -f2) >> $GITHUB_ENV
             - run: |
                 docker tag $BASENAME:$PR_TAG $BASENAME:$TIMESTAMP
                 docker tag $BASENAME:$PR_TAG $BASENAME:$WINE_TAG
