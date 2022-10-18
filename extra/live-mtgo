@@ -1,4 +1,10 @@
 #!/usr/bin/env bash
-ref=${1:-master}
+ref=${1:-master}; shift
 set -x
-curl -fL "https://raw.githubusercontent.com/pauleve/docker-mtgo/${ref}/extra/mtgo.sh" | bash
+if curl -fL "https://raw.githubusercontent.com/pauleve/docker-mtgo/${ref}/extra/mtgo.sh" -o mtgo.sh; then
+    bash mtgo.sh "${@}"
+else
+    echo "WARNING: impossible to download mtgo launch script from ${ref}!"
+    echo "Falling back to pre-installed version"
+    /usr/local/bin/mtgo "${@}"
+fi

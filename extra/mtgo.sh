@@ -52,7 +52,19 @@ workaround_dotnet() {
 }
 workaround_dotnet
 
-run wine /opt/mtgo/mtgo.exe
+setup="/opt/mtgo/mtgo.exe"
+setup_url="https://mtgo.patch.daybreakgames.com/patch/mtg/live/client/setup.exe?v=5"
+expected_hash="1185b362e337e36cf00b6de5e71ca132"
+setup_hash="$(md5sum -b ${setup} | cut -f1 -d' ')"
+if [[ "${setup_hash}" != "${expected_hash}" ]]; then
+    echo "WARNING: Downloading setup.exe"
+    home_setup="${HOME}/setup.exe"
+    if curl -fL "${setup_url}" -o ${home_setup}; then
+        setup="${home_setup}"
+    fi
+fi
+
+run wine ${setup}
 started=0
 s=6
 while :; do
