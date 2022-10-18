@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+url="https://raw.githubusercontent.com/pauleve/docker-mtgo/master/run-mtgo"
+if command -v curl >/dev/null; then
+    get_run_mtgo() {
+        curl -fsSL "${url}"
+    }
+elif command -v wget >/dev/null; then
+    get_run_mtgo() {
+        wget -qO - "${url}"
+    }
+else
+    echo "ERROR: neither curl or wget are installed..."
+    exit 1
+fi
+set -x
+get_run_mtgo | bash -s - "${@}"
