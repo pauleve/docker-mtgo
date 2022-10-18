@@ -1,6 +1,13 @@
 # MTGO docker image
 
  <a title="Docker Hub" href="https://hub.docker.com/r/panard/mtgo"><img src="https://img.shields.io/docker/pulls/panard/mtgo.svg?longCache=true&style=flat-square&logo=docker&logoColor=fff"></a>
+ 
+ > :warning: :warning:
+ > **With the recent transition to Daybreak, you need to perform once**
+ > ```
+ > ./run-mtgo --reset --update
+ > ```
+ >
 
 This image provides a ready-to-play Magic The Gathering Online (MTGO) for Linux
 and macOS.
@@ -107,14 +114,6 @@ You need to logout/login for the changes to take effect.
 docker kill mtgo_running
 ```
 
-* Poor performance on Linux (game hangs regularly)
-
-If you are using an Nvidia graphics card, check https://github.com/pauleve/docker-mtgo/issues/132
-Alternatively try
-```
-./run-mtgo panard/mtgo:wine-4.9
-```
-
 
 ## FAQ
 
@@ -122,7 +121,8 @@ Alternatively try
 
 ### Import/export deck files
 
-Assuming your decks are in the `~/mtgo` folder, you can use
+By default, the folder `~/.local/share/mtgo/files` is bound to the Windows "Documents" folder.
+You can change it using the `--bind` option: assuming your decks are in the `~/mtgo` folder
 ```
 ./run-mtgo --bind ~/mtgo
 ```
