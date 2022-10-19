@@ -18,7 +18,7 @@ run() {
     "${@}"
 }
 
-commontricks="gdiplus=native"
+commontricks="gdiplus=builtin"
 
 if $do_sound; then
     gst-inspect-1.0 # seems to help avoiding wine crash when loading gstreamer

@@ -27,7 +27,6 @@ RUN apt-get update \
     && apt clean -y && rm -rf /var/lib/apt/lists/*
 
 RUN su - $WINE_USER -c 'wineboot -i' \
-    && su - $WINE_USER -c 'winetricks -q gdiplus gdiplus=native' \
     && su - $WINE_USER -c 'winetricks -q corefonts' \
     && su - $WINE_USER -c 'taskset -c 0 winetricks -f -q dotnet472' \
     && su - $WINE_USER -c 'winetricks win7 sound=alsa ddr=gdi'\
