@@ -13,6 +13,8 @@ OS: <Linux (specify distribution), macOS, ...>
 Desktop environment (for Linux): <Gnome, KDE, ...>
 Graphics card: ...
 Output of `docker info`:
+```
 <insert here>
+```
 
 <attach `output.log` file from `./run-mtgo &>output.log`>
