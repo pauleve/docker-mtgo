@@ -92,7 +92,7 @@ case "${1:-}" in
     --data-volume) shift
         data="$1" ;;
     --debug)
-        opts="${opts} -e WINEDEBUG=" ;;
+        opts="${opts} -e WINEDEBUG=warn+all" ;;
     --dry-run)
         do_run=false ;;
     --winecfg)

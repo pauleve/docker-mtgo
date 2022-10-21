@@ -34,7 +34,7 @@ RUN su - $WINE_USER -c 'wineboot -i' \
     && su - $WINE_USER -c 'wineboot -s' \
     && rm -rf /home/wine/.cache
 
-ENV WINEDEBUG -all,err+all
+ENV WINEDEBUG -all,err+all,warn+chain,warn+cryptnet
 
 COPY extra/mtgo.sh /usr/local/bin/mtgo
 
