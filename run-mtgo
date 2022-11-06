@@ -177,6 +177,8 @@ if $detect_tz; then
     fi
 fi
 
+run docker info || exit 1
+
 if $do_reset; then
     msg="You are about to wipe docker volume ${data}"
     echo "WARNING: $msg" >&2
