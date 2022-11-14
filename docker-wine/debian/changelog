@@ -1,11 +1,11 @@
-wine (6.8~bullseye-1) UNRELEASED; urgency=low
+wine (7.21~bullseye-1) UNRELEASED; urgency=low
 
   * version number update by debtransform
 
- -- debtransform <build@opensuse.org>  Sat, 08 May 2021 00:19:54 +0000
+ -- debtransform <build@opensuse.org>  Sun, 13 Nov 2022 13:07:45 +0000
 
-wine (6.8) UNRELEASED; urgency=low
+wine (7.21) UNRELEASED; urgency=low
 
- * Update to 6.8 development release.  Fri, 07 May 2021 16:22:43 -0500
+  * Update to 7.21 development release.  
  
- -- Rosanne DiMesio <dimesio@earthlink.net>
+ -- Rosanne DiMesio <dimesio@earthlink.net>  Sun, 13 Nov 2022 06:15:58 -0600
