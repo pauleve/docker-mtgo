@@ -54,7 +54,7 @@ workaround_dotnet
 
 setup="/opt/mtgo/mtgo.exe"
 setup_url="https://mtgo.patch.daybreakgames.com/patch/mtg/live/client/setup.exe?v=5"
-expected_hash="1185b362e337e36cf00b6de5e71ca132"
+expected_hash="a697271499c96d888042af69646be0bc"
 setup_hash="$(md5sum -b ${setup} | cut -f1 -d' ')"
 if [[ "${setup_hash}" != "${expected_hash}" ]]; then
     echo "WARNING: Downloading setup.exe"
