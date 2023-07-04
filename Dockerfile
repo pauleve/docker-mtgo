@@ -28,7 +28,7 @@ RUN apt-get update \
 
 RUN su - $WINE_USER -c 'wineboot -i' \
     && su - $WINE_USER -c 'winetricks -q corefonts' \
-    && su - $WINE_USER -c 'taskset -c 0 winetricks -f -q dotnet472' \
+    && su - $WINE_USER -c 'taskset -c 0 winetricks -f -q dotnet48' \
     && su - $WINE_USER -c 'winetricks win7 sound=alsa ddr=gdi'\
     && su - $WINE_USER -c 'winetricks renderer=gdi'\
     && su - $WINE_USER -c 'wineboot -s' \
