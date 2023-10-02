@@ -12,8 +12,7 @@ COPY extra/host-webbrowser /usr/local/bin/xdg-open
 COPY extra/live-mtgo /usr/local/bin/live-mtgo
 
 # Winetricks
-ARG WINETRICKS_VERSION=master
-ADD https://raw.githubusercontent.com/Winetricks/winetricks/$WINETRICKS_VERSION/src/winetricks /usr/local/bin/winetricks
+ADD https://raw.githubusercontent.com/calheb/winetricks/e3d25a174d27ef5109803e597af2d65085755334/src/winetricks /usr/local/bin/winetricks
 RUN chmod 755 /usr/local/bin/winetricks
 
 ENV DEBIAN_FRONTEND noninteractive
