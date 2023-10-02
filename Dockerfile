@@ -26,19 +26,24 @@ RUN apt-get update \
     && apt autoremove -y --purge \
     && apt clean -y && rm -rf /var/lib/apt/lists/*
 
-RUN su - $WINE_USER -c 'wineboot -i' \
-    && su - $WINE_USER -c 'winetricks -q corefonts calibri tahoma' \
-    && su - $WINE_USER -c 'taskset -c 0 winetricks -f -q dotnet48' \
-    && su - $WINE_USER -c 'winetricks win7 sound=alsa ddr=gdi'\
-    && su - $WINE_USER -c 'winetricks renderer=gdi'\
-    && su - $WINE_USER -c 'wineboot -s' \
+USER wine
+
+RUN wineboot -i \
+    && for f in arial32 times32 trebuc32 verdan32; do \
+        curl -fL --output-dir /home/wine/.cache/winetricks/corefonts --create-dirs\
+            -O https://web.archive.org/web/20180219204401/https://mirrors.kernel.org/gentoo/distfiles/$f.exe; done\
+    && winetricks -q corefonts calibri tahoma \
+    && taskset -c 0 winetricks -f -q dotnet48 \
+    && winetricks win7 sound=alsa ddr=gdi \
+    && winetricks renderer=gdi \
+    && wineboot -s \
     && rm -rf /home/wine/.cache
 
 ENV WINEDEBUG -all,err+all,warn+chain,warn+cryptnet
 
 COPY extra/mtgo.sh /usr/local/bin/mtgo
 
-ADD --chown=wine:wine https://mtgo.patch.daybreakgames.com/patch/mtg/live/client/setup.exe?v=7 /opt/mtgo/mtgo.exe
+ADD --chown=wine:wine https://mtgo.patch.daybreakgames.com/patch/mtg/live/client/setup.exe?v=8 /opt/mtgo/mtgo.exe
 
 USER wine
 
