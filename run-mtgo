@@ -2,7 +2,8 @@
 
 defaultcmd="mtgo"
 
-image=panard/mtgo:latest
+image=docker.io/panard/mtgo:latest
+docker_client=docker
 limit_cpus=4
 name=mtgo_running
 cmd=$defaultcmd
@@ -177,34 +178,34 @@ if $detect_tz; then
     fi
 fi
 
-run docker info || exit 1
+run ${docker_client} info || exit 1
 
 if $do_reset; then
     msg="You are about to wipe docker volume ${data}"
     echo "WARNING: $msg" >&2
     echo "Press Enter to continue, CTRL+C to abort" >&2
     read
-    run docker volume rm $data
+    run ${docker_client} volume rm $data
 fi
 
 if $do_update; then
     echo "Updating image ${image}..." >&2
-    run docker pull ${image}
+    run ${docker_client} pull ${image}
 fi
 
-docker volume inspect "$data" >/dev/null 2>&1
+${docker_client} volume inspect "$data" >/dev/null 2>&1
 if [ $? -ne 0 ]; then
 	set -e
-	run docker volume create "${data}"
+	run ${docker_client} volume create "${data}"
 
 	# migration
 	old_data=mtgo-data
 	set +e
-	docker volume inspect ${old_data}>/dev/null 2>&1
+	${docker_client} volume inspect ${old_data}>/dev/null 2>&1
 	if [ $? -eq 0 ]; then
 		set -e
 		echo "Migrating from previous configuration..." >&2
-		run docker run --rm -v ${data}:/home/wine/.wine/host \
+		run ${docker_client} run --rm -v ${data}:/home/wine/.wine/host \
             -v ${old_data}:/data \
             -v ${local_data}:/ldata \
             -i ${image} bash<<EOF
@@ -212,10 +213,10 @@ cp -av /data/* /home/wine/.wine/host/
 cp -v /ldata/*.reg /home/wine/.wine/host/
 chown -R wine: /home/wine/.wine/host/
 EOF
-        run docker volume rm ${old_data}
+        run ${docker_client} volume rm ${old_data}
 	else
 		set -e
-		run docker run --rm -v ${data}:/home/wine/.wine/host ${image} true
+		run ${docker_client} run --rm -v ${data}:/home/wine/.wine/host ${image} true
 	fi
 fi
 set -e
@@ -320,7 +321,7 @@ if [ ${limit_cpus} -gt 0 ]; then
 fi
 
 docker_mtgo() {
-    run docker run --privileged --rm -e DISPLAY \
+    run ${docker_client} run --privileged --rm -e DISPLAY \
         ${opts} ${image} ${cmd} ${cmdargs}
 }
 watch_openurl() {
