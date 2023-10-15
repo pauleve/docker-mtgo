@@ -129,3 +129,7 @@ You can change it using the `--bind` option: assuming your decks are in the `~/m
 to have access to this folder from the Docker mtgo as the `Documents` folder.
 
 See also [Access host files](https://github.com/pauleve/docker-mtgo/issues/11#issuecomment-355766306)
+
+### Replace Docker with Podman
+
+If you are using podman as an alternative  container manager, change the value of the "docker_client" parameter to podman. Also add the "--userns keepid" to the "opts" parameter, since default Podman behavior doesn't change file ownership when mounting a volume.
