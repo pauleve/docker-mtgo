@@ -36,6 +36,9 @@ RUN pacman -Syy && \
         libwbclient \
         libxinerama \
         libxcomposite \
+    && pacman -Scc
+
+RUN pacman -U --noconfirm \
         /tmp/*.zst \
     && pacman -Scc
 
@@ -55,7 +58,7 @@ ENV WINEDEBUG -all,err+all,warn+chain,warn+cryptnet
 USER wine
 WORKDIR /home/wine
 RUN wineboot -i \
-    && winetricks -q corefonts calibri tahoma \
+    && winetricks -q calibri tahoma \
     && taskset -c 0 winetricks -q dotnet48 \
     && wineboot -s \
     && rm -rf /home/wine/.cache
@@ -67,7 +70,7 @@ USER root
 COPY extra/mtgo.sh /usr/local/bin/mtgo
 ADD --chown=wine:wine https://mtgo.patch.daybreakgames.com/patch/mtg/live/client/setup.exe?v=8 /opt/mtgo/mtgo.exe
 
-USER user
+USER wine
 
 # hack to allow mounting of user.reg and system.reg from host
 # see https://github.com/pauleve/docker-mtgo/issues/6
