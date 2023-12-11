@@ -36,6 +36,9 @@ run wineboot
 # workaround cert verification crash (wine 6.19)
 mkdir -pv ~/.wine/host/wine/AppData/LocalLow
 
+# workaround Z: causing crashes
+rm -vf ~/.wine/dosdevices/z\:
+
 cd ~/.wine/drive_c/
 
 workaround_dotnet() {
