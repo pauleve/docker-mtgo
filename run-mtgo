@@ -2,14 +2,14 @@
 
 defaultcmd="mtgo"
 
-image=panard/mtgo:wow64
+image=docker.io/panard/mtgo:bin
 docker_client=docker
 limit_cpus=4
 name=mtgo_running
 cmd=$defaultcmd
 cmdargs=""
 opts=""
-data="mtgo64-data-$USER"
+data="mtgo-bin-data-$USER"
 do_sound=false
 do_update=false
 

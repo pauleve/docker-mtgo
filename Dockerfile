@@ -1,34 +1,10 @@
-
-### build wine-wow64
-FROM archlinux:latest as builder
-
-RUN pacman -Syy
-RUN pacman -S --noconfirm git base-devel
-
-RUN useradd -d /home/user -m user
-RUN echo 'user ALL=(ALL:ALL) NOPASSWD: ALL' > /etc/sudoers.d/user
-RUN echo 'MAKEFLAGS="-j4"' >> /etc/makepkg.conf
-
-USER user
-WORKDIR /home/user
-RUN git clone https://aur.archlinux.org/wine-wow64.git
-WORKDIR /home/user/wine-wow64
-
-RUN makepkg --syncdeps --noconfirm -o
-RUN makepkg
-
-
-###
-### main image
-###
-
 FROM archlinux:latest
-COPY --from=builder /home/user/wine-wow64/*.zst /tmp
 CMD mtgo
 ENV WINE_USER wine
 ENV WINE_UID 1000
 ENV WINEPREFIX /home/wine/.wine
 
+RUN echo -e "[multilib]\nInclude = /etc/pacman.d/mirrorlist" >> /etc/pacman.conf
 RUN pacman -Syy && \
     pacman -S --noconfirm \
         cabextract \
@@ -36,10 +12,7 @@ RUN pacman -Syy && \
         libwbclient \
         libxinerama \
         libxcomposite \
-    && pacman -Scc
-
-RUN pacman -U --noconfirm \
-        /tmp/*.zst \
+        wine\
     && pacman -Scc
 
 RUN useradd -u $WINE_UID -d /home/wine -m -s /bin/bash $WINE_USER
@@ -49,16 +22,21 @@ WORKDIR /home/wine
 COPY extra/host-webbrowser /usr/local/bin/xdg-open
 COPY extra/live-mtgo /usr/local/bin/live-mtgo
 
-# Winetricks
-ADD https://raw.githubusercontent.com/calheb/winetricks/e3d25a174d27ef5109803e597af2d65085755334/src/winetricks /usr/local/bin/winetricks
-RUN chmod 755 /usr/local/bin/winetricks
-
 ENV WINEDEBUG -all,err+all,warn+chain,warn+cryptnet
+ENV WINEARCH win32
+
+# Winetricks
+ARG WINETRICKS_VERSION=master
+ADD https://raw.githubusercontent.com/Winetricks/winetricks/$WINETRICKS_VERSION/src/winetricks /usr/local/bin/winetricks
+RUN chmod 755 /usr/local/bin/winetricks
 
 USER wine
 WORKDIR /home/wine
 RUN wineboot -i \
-    && winetricks -q calibri tahoma \
+    && for f in arial32 times32 trebuc32 verdan32; do \
+        curl -fL --output-dir /home/wine/.cache/winetricks/corefonts --create-dirs\
+            -O https://web.archive.org/web/20180219204401/https://mirrors.kernel.org/gentoo/distfiles/$f.exe; done\
+    && winetricks -q corefonts calibri tahoma \
     && taskset -c 0 winetricks -q dotnet48 \
     && wineboot -s \
     && rm -rf /home/wine/.cache
