@@ -10,7 +10,7 @@ export CC = $(shell for _cc in gcc-4.5 gcc-4.7 gcc-4.9 gcc false; do \
 
 # export CC = gcc -fcf-protection=none -fno-stack-protector
 
-export CONFFLAGS = --without-dbus --without-cups --without-vulkan
+export CONFFLAGS = --without-dbus --without-cups --without-vulkan --enable-archs=i386,x86_64
 
 %:
 	dh $@ --parallel
@@ -23,7 +23,6 @@ ifeq ($(DEB_BUILD_ARCH), amd64)
 				--libdir=\$${prefix}/lib64 \
 				--mandir=\$${prefix}/share/man \
 				--infodir=\$${prefix}/share/info \
-				--enable-win64 \
 				--disable-tests \
 				$(CONFFLAGS)
 else
