@@ -2,8 +2,7 @@
 ### build wine-wow64
 FROM archlinux:latest as builder
 
-RUN pacman -Syy
-RUN pacman -S --noconfirm git base-devel
+RUN pacman -Syy && pacman -S --noconfirm base-devel curl
 
 RUN useradd -d /home/user -m user
 RUN echo 'user ALL=(ALL:ALL) NOPASSWD: ALL' > /etc/sudoers.d/user
@@ -11,11 +10,23 @@ RUN echo 'MAKEFLAGS="-j4"' >> /etc/makepkg.conf
 
 USER user
 WORKDIR /home/user
-RUN git clone https://aur.archlinux.org/wine-wow64.git
+
+# 9.0-rc1
+# https://aur.archlinux.org/packages/wine-wow64
+# https://aur.archlinux.org/cgit/aur.git/commit/?h=wine-wow64
+ARG AUR_TAG=5373213607fdc07dcadcc0e18f8ba09b90ae984c
+
+RUN curl -fL https://aur.archlinux.org/cgit/aur.git/snapshot/aur-${AUR_TAG}.tar.gz | tar xzv\
+    && mv aur-${AUR_TAG} wine-wow64
+
 WORKDIR /home/user/wine-wow64
 
+USER root
+RUN pacman -Syy
+USER user
 RUN makepkg --syncdeps --noconfirm -o
-RUN makepkg
+RUN sed -i 's,$srcdir/$_name-$pkgver,$srcdir/$_name-$_pkgver,' PKGBUILD
+RUN cat PKGBUILD; makepkg
 
 
 ###
@@ -58,7 +69,10 @@ ENV WINEDEBUG -all,err+all,warn+chain,warn+cryptnet
 USER wine
 WORKDIR /home/wine
 RUN wineboot -i \
-    && winetricks -q calibri tahoma \
+    && for f in arial32 times32 trebuc32 verdan32; do \
+        curl -fL --output-dir /home/wine/.cache/winetricks/corefonts --create-dirs\
+            -O https://web.archive.org/web/20180219204401/https://mirrors.kernel.org/gentoo/distfiles/$f.exe; done\
+    && winetricks -q corefonts calibri tahoma \
     && taskset -c 0 winetricks -q dotnet48 \
     && wineboot -s \
     && rm -rf /home/wine/.cache
