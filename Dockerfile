@@ -1,5 +1,4 @@
-FROM panard/wine:custom
-MAINTAINER Panard <panard@backzone.net>
+FROM wine:wow64
 CMD mtgo
 
 ENV WINE_USER wine
@@ -34,7 +33,7 @@ RUN wineboot -i \
             -O https://web.archive.org/web/20180219204401/https://mirrors.kernel.org/gentoo/distfiles/$f.exe; done\
     && winetricks -q corefonts calibri tahoma \
     && taskset -c 0 winetricks -f -q dotnet48 \
-    && winetricks win7 sound=alsa ddr=gdi \
+    && winetricks win7 sound=alsa \
     && winetricks renderer=gdi \
     && wineboot -s \
     && rm -rf /home/wine/.cache

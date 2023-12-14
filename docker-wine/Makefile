@@ -1,8 +1,8 @@
 
 DOCKER=docker
 
-custom64:
-	$(DOCKER) pull debian:stable-slim
-	$(DOCKER) pull debian:stable
-	#$(DOCKER) pull i386/debian:stable
-	$(DOCKER) build -t panard/wine:$@ -f Dockerfile .
+wow64:
+	$(DOCKER) buildx build --platform linux/amd64,linux/arm64/v8 -t panard/wine:wow64 .
+
+push: 
+	$(DOCKER) buildx build --platform linux/amd64,linux/arm64/v8 -t panard/wine:wow64 --push .

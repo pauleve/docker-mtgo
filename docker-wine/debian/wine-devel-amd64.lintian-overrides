@@ -1,3 +1,0 @@
-# Wine preloader needs static linking to reserve memory and work properly, see
-# the comments at loader/preloader.c for a fuller explanation
-wine-devel-amd64 binary: statically-linked-binary /opt/wine-devel/bin/wine64-preloader
