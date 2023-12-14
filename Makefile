@@ -6,7 +6,6 @@ BASE=panard/mtgo:$(TIMESTAMP)
 DOCKER=docker
 
 image:
-	make -C docker-wine $(shell grep FROM Dockerfile|cut -d: -f2)
 	$(DOCKER) build -t $(BASE) .
 
 test:
