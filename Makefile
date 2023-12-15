@@ -1,5 +1,5 @@
 
-TIMESTAMP=$(shell date +%F)
+TIMESTAMP=wow64
 
 BASE=panard/mtgo:$(TIMESTAMP)
 
