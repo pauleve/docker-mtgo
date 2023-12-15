@@ -1,3 +1,6 @@
 [submodule "docker-wine/wine-packaging"]
 	path = docker-wine/wine-packaging
 	url = https://github.com/wine-compholio/wine-packaging.git
+[submodule "docker-wine"]
+	path = docker-wine
+	url = https://github.com/pauleve/docker-wine-wow64.git
