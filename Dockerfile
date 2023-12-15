@@ -1,4 +1,4 @@
-FROM wine:wow64
+FROM panard/wine:9.0-rc1-wow64
 CMD mtgo
 
 ENV WINE_USER wine
@@ -9,21 +9,6 @@ WORKDIR /home/wine
 
 COPY extra/host-webbrowser /usr/local/bin/xdg-open
 COPY extra/live-mtgo /usr/local/bin/live-mtgo
-
-# Winetricks
-ARG WINETRICKS_VERSION=master
-ADD https://raw.githubusercontent.com/Winetricks/winetricks/$WINETRICKS_VERSION/src/winetricks /usr/local/bin/winetricks
-RUN chmod 755 /usr/local/bin/winetricks
-
-ENV DEBIAN_FRONTEND noninteractive
-RUN apt-get update \
-    && apt-get install -y --no-install-recommends \
-        ca-certificates \
-        curl \
-        cabextract \
-        winbind \
-    && apt autoremove -y --purge \
-    && apt clean -y && rm -rf /var/lib/apt/lists/*
 
 USER wine
 
