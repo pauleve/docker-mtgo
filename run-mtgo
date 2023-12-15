@@ -9,7 +9,7 @@ name=mtgo_running
 cmd=$defaultcmd
 cmdargs=""
 opts=""
-data="mtgo-data-$USER"
+data="mtgo64-data-$USER"
 do_sound=false
 do_update=false
 
@@ -138,7 +138,6 @@ case "${1:-}" in
                 shift
             done
             image=$1
-            do_update=true
         fi ;;
 esac
 shift
