@@ -1,4 +1,4 @@
-FROM panard/wine:9.0-rc1-wow64
+FROM panard/wine:9.0-rc2-wow64
 CMD mtgo
 
 ENV WINE_USER wine
