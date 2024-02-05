@@ -11,6 +11,16 @@ while [ -n "${1:-}" ]; do
    shift
 done
 
+if [ ! -d "${HOME}/.wine/drive_c/windows/syswow64" ]; then
+    echo
+    echo
+    echo "IMPORTANT: This image now uses Windows in 64bit mode (WoW64)"
+    echo "You have to reset your settings: "
+    echo "       ./run-mtgo --reset"
+    echo
+    exit 1
+fi
+
 trap "exit" INT
 
 run() {
