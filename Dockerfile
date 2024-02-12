@@ -15,7 +15,7 @@ USER wine
 RUN wineboot -i \
     && for f in arial32 times32 trebuc32 verdan32; do \
         curl -fL --output-dir /home/wine/.cache/winetricks/corefonts --create-dirs\
-            -O https://web.archive.org/web/20180219204401/https://mirrors.kernel.org/gentoo/distfiles/$f.exe; done\
+            -O https://github.com/pushcx/corefonts/raw/master/$f.exe; done \
     && winetricks -q corefonts calibri tahoma \
     && taskset -c 0 winetricks -f -q dotnet48 \
     && winetricks win7 sound=alsa \
