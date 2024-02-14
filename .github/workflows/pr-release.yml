@@ -40,7 +40,7 @@ jobs:
               run: |
                 git tag $TIMESTAMP
                 git push --tags https://${GITHUB_ACTOR}:${{ secrets.PAT }}@github.com/${GITHUB_REPOSITORY}.git HEAD:master
-                echo WINE_TAG=$(grep FROM Dockerfile|cut -d: -f2) >> $GITHUB_ENV
+                echo WINE_TAG=wine-$(grep FROM Dockerfile|cut -d: -f2) >> $GITHUB_ENV
             - run: |
                 docker tag $BASENAME:$PR_TAG $BASENAME:$TIMESTAMP
                 docker tag $BASENAME:$PR_TAG $BASENAME:$WINE_TAG
