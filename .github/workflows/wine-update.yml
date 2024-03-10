@@ -29,10 +29,10 @@ jobs:
         uses: peter-evans/create-pull-request@v3.5.0
         with:
           token: ${{ secrets.PAT }}
-          commit-message: Update wine to ${{ steps.wine.outputs.release_tag }}
-          title: Update wine to ${{ steps.wine.outputs.release_tag }}
+          commit-message: Update wine to ${{ env.LATEST_TAG }}
+          title: Update wine to ${{ env.LATEST_TAG }}
           body: |
-              Updates wine to ${{ steps.wine.outputs.release_tag }}
+              Updates wine to ${{ env.LATEST_TAG }} using Docker image from https://github.com/pauleve/docker-wine-wow64
 
               ```
               ./run-mtgo --update --test panard/mtgo:pr<#ID>
