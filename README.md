@@ -14,7 +14,7 @@ and macOS.
 
 Join the "WineHQ Players" clan! (Account > Buddies, Clan, Chat > Look for WineHQ Players and contact the captain, or send a mail to panard at inzenet dot org with your MTGO user name)
 
-It is based on an amd64 [debian:stable-slim](https://hub.docker.com/r/_/debian/) Linux distribution and [WineHQ](https://www.winehq.org/) 9.0-rc3 with WOW64 support.
+It is based on an amd64 [debian:stable-slim](https://hub.docker.com/r/_/debian/) Linux distribution and [WineHQ](https://www.winehq.org/) with WOW64 support.
 
 See https://appdb.winehq.org/objectManager.php?sClass=version&iId=32007 for more information.
 

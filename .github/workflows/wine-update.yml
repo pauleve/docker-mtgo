@@ -19,15 +19,12 @@ jobs:
       - name: Get Latest Wine Version
         id: wine
         run: |
-          echo ::set-output name=release_tag::$(curl -sL https://hub.docker.com/v2/namespaces/panard/repositories/wine/tags | jq -r '.results[].name' | grep '\-wow64$' | head -n1)
-          echo ::set-output name=current_tag::$(grep FROM Dockerfile|cut -d: -f2)
+          echo LATEST_TAG=$(curl -sL https://hub.docker.com/v2/namespaces/panard/repositories/wine/tags | jq -r '.results[].name' | grep '\-wow64$' | head -n1) >> $GITHUB_ENV
+          echo CURRENT_TAG=$(grep FROM Dockerfile|cut -d: -f2) >> $GITHUB_ENV
       - name: Update Wine
-        if: steps.wine.outputs.current_tag != steps.wine.outputs.release_tag
-        env:
-          RELEASE_TAG: ${{ steps.wine.outputs.release_tag }}
+        if: env.CURRENT_TAG != env.LATEST_TAG
         run: |
-            sed -i "s:FROM .*$:FROM panard/wine:$RELEASE_TAG" docker-wine/Dockerfile
-            sed -i "s:^\(It is based on .* wine \)[^ ]*[0-9]:\1$RELEASE_TAG:" README.md
+            sed -i "s:FROM .*$:FROM panard/wine:$LATEST_TAG" docker-wine/Dockerfile
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v3.5.0
         with:
