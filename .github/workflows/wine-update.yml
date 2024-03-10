@@ -24,7 +24,7 @@ jobs:
       - name: Update Wine
         if: env.CURRENT_TAG != env.LATEST_TAG
         run: |
-            sed -i "s:FROM .*$:FROM panard/wine:$LATEST_TAG" docker-wine/Dockerfile
+          sed -i "s,FROM .*$,FROM panard/wine:$LATEST_TAG," docker-wine/Dockerfile
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v3.5.0
         with:
