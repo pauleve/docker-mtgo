@@ -10,7 +10,7 @@ RUN apt update && apt install -y --no-install-recommends \
     && apt autoremove -y --purge \
     && apt clean -y && rm -rf /var/lib/apt/lists/* \
     && for x in alpha avi cutter gio; do \
-        rm /usr/lib/i386-linux-gnu/gstreamer-1.0/libgst$x.so; done
+        rm /usr/lib/*/gstreamer-1.0/libgst$x.so; done
 
 COPY pulse-client.conf /etc/pulse/client.conf
 
