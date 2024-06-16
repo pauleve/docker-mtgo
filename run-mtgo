@@ -178,6 +178,7 @@ if $detect_tz; then
 fi
 
 run ${docker_client} info || exit 1
+echo "UID=${UID}"
 
 if $do_reset; then
     msg="You are about to wipe docker volume ${data}"
@@ -320,7 +321,8 @@ if [ ${limit_cpus} -gt 0 ]; then
 fi
 
 docker_mtgo() {
-    run ${docker_client} run --privileged --rm -e DISPLAY \
+    #run ${docker_client} run --privileged --rm -e DISPLAY \
+    run ${docker_client} run --rm -e DISPLAY \
         ${opts} ${image} ${cmd} ${cmdargs}
 }
 watch_openurl() {
