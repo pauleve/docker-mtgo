@@ -3,12 +3,12 @@
 defaultcmd="mtgo"
 
 image=docker.io/panard/mtgo:latest
-docker_client=docker
-limit_cpus=4
+docker_client=podman
+limit_cpus=0
 name=mtgo_running
 cmd=$defaultcmd
 cmdargs=""
-opts=""
+opts="--userns keep-id"
 data="mtgo64-data-$USER"
 do_sound=false
 do_update=false
@@ -205,7 +205,7 @@ if [ $? -ne 0 ]; then
 	if [ $? -eq 0 ]; then
 		set -e
 		echo "Migrating from previous configuration..." >&2
-		run ${docker_client} run --rm -v ${data}:/home/wine/.wine/host \
+		run ${docker_client} run ${opts} --rm -v ${data}:/home/wine/.wine/host \
             -v ${old_data}:/data \
             -v ${local_data}:/ldata \
             -i ${image} bash<<EOF
@@ -216,7 +216,7 @@ EOF
         run ${docker_client} volume rm ${old_data}
 	else
 		set -e
-		run ${docker_client} run --rm -v ${data}:/home/wine/.wine/host ${image} true
+		run ${docker_client} run ${opts} --rm -v ${data}:/home/wine/.wine/host ${image} true
 	fi
 fi
 set -e
