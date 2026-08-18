@@ -75,10 +75,52 @@ Depending on your configuration, you may want to adjust the resolution of the ga
 It will launch a configuration tool prior to launching MTGO. There you may be interested in the Graphics tab and use settings like this:
 ![](https://private-user-images.githubusercontent.com/228657/289696255-36af1dee-bea0-4363-93af-0d9c7bc849a0.png?jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3MTAzMjI1MDUsIm5iZiI6MTcxMDMyMjIwNSwicGF0aCI6Ii8yMjg2NTcvMjg5Njk2MjU1LTM2YWYxZGVlLWJlYTAtNDM2My05M2FmLTBkOWM3YmM4NDlhMC5wbmc_WC1BbXotQWxnb3JpdGhtPUFXUzQtSE1BQy1TSEEyNTYmWC1BbXotQ3JlZGVudGlhbD1BS0lBVkNPRFlMU0E1M1BRSzRaQSUyRjIwMjQwMzEzJTJGdXMtZWFzdC0xJTJGczMlMkZhd3M0X3JlcXVlc3QmWC1BbXotRGF0ZT0yMDI0MDMxM1QwOTMwMDVaJlgtQW16LUV4cGlyZXM9MzAwJlgtQW16LVNpZ25hdHVyZT00YzAwOGE1YmJlM2Q3OWZhYmM0ZTg5N2Q3MmNjZmQ3MTM4NDY5Yjk0ZjJiMGI1YjNmN2VkNjNhMGU2NjRmZjMyJlgtQW16LVNpZ25lZEhlYWRlcnM9aG9zdCZhY3Rvcl9pZD0wJmtleV9pZD0wJnJlcG9faWQ9MCJ9.AmIjIl49KCDxX8juEb5wrT_e7CAZ2PogzpPlvDlC5z4)
 
-Sound is disabled by default, but adventurous users can give a try to
+### Sound
+
+Sound is disabled by default.  To enable it:
 ```
 ./run-mtgo --sound
 ```
+Until the patched image is published, build it locally on top of the image you
+already use, and name it explicitly (`--sound` alone pulls the image from the
+hub):
+```
+make sound-local
+./run-mtgo --sound panard/mtgo:sound-local
+```
+This uses the `panard/mtgo:sound` image, which talks to the PulseAudio (or
+PipeWire) server of the host, and patches the audio code of your local MTGO
+installation, because the client's own audio path does not work under wine
+(see [#217](https://github.com/pauleve/docker-mtgo/issues/217)):
+
+* MTGO refuses to play anything when the Windows master volume reads as 0,
+  which is what wine reports;
+* MTGO enumerates WASAPI audio sessions through `ISimpleAudioVolume`, which
+  wine does not implement;
+* every sound is converted by the Media Foundation resampler, which wine does
+  not provide, and MTGO disables its audio for the whole session on the first
+  such failure.
+
+[SOUND.md](./SOUND.md) documents the whole mechanism, the evidence behind each
+patch and how to update it when a client release breaks it.
+
+The patch is applied to the copy of the client stored in your docker volume,
+right before MTGO starts, and again whenever the client updates itself (in that
+case sound comes back at the next start).  The original files are backed up in
+`AppData/Local/mtgo-audio-patch` inside the volume, and the MTGO volume sliders
+keep working.  Related options:
+
+```
+./run-mtgo --sound --no-audio-patch   # leave the client untouched
+./run-mtgo --sound --force-volume     # always play at 100%, ignore MTGO sliders
+```
+
+To undo the patch (for instance to check whether a client update fixed things
+upstream):
+```
+./run-mtgo --cmd 'mtgo-audio-patch --restore'
+```
+
 do not hesitate to report issues.
 
 To ensure running the latest docker image, use
@@ -114,6 +156,13 @@ You need to logout/login for the changes to take effect.
 ```
 docker kill mtgo_running
 ```
+
+* no sound, and `--sound` prints `this MTGO version is not supported by the
+audio patch`:
+
+the audio patch recognises the code it has to rewrite; if MTGO restructures it,
+the patch refuses to touch the client rather than corrupting it.  Please report
+it, mentioning the client version.
 
 
 ## FAQ

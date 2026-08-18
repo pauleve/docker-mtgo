@@ -1,8 +1,10 @@
-FROM panard/mtgo:latest
+ARG BASE=panard/mtgo:latest
+FROM ${BASE}
 
 USER root
 
 RUN apt update && apt install -y --no-install-recommends \
+        python3-minimal \
         gstreamer1.0-plugins-good \
         gstreamer1.0-tools \
         gstreamer1.0-pulseaudio \

@@ -26,7 +26,19 @@ validate: push tag
 
 .PHONY: sound
 sound:
-	$(DOCKER) build -t panard/mtgo:sound sound/
+	$(DOCKER) build --build-arg BASE=$(BASE) -t panard/mtgo:sound sound/
+
+try-sound:
+	./run-mtgo --sound panard/mtgo:sound
+
+# sound image on top of the published base image (no full rebuild)
+LOCALBASE=panard/mtgo:latest
+sound-local:
+	$(DOCKER) build --build-arg BASE=$(LOCALBASE) -t panard/mtgo:sound-base sound/
+	$(DOCKER) build -f sound/local.Dockerfile -t panard/mtgo:sound-local .
+
+try-sound-local:
+	./run-mtgo --sound panard/mtgo:sound-local
 
 push-sound:
 	$(DOCKER) push panard/mtgo:sound
