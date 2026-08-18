@@ -24,6 +24,8 @@ Options:
     -h, --help          display this message and exit
     --sound             enable sound (requires PulseAudio and Linux)
     --disable-sound     ensure that sound is disabled
+    --no-audio-patch    do not patch the MTGO client for wine audio support
+    --force-volume      ignore MTGO volume sliders (play everything at 100%)
     --cmd CMD           initial command (default: $cmd)
     --data-volume VOL   docker volume to store data (default: ${data})
     --reset             reset local data and docker volume
@@ -46,7 +48,7 @@ Options:
 lopts="dry-run,help,winecfg,shell,cmd:,name:"
 lopts="${lopts},bind:"
 lopts="${lopts},data-volume:,reset"
-lopts="${lopts},sound,disable-sound"
+lopts="${lopts},sound,disable-sound,no-audio-patch,force-volume"
 lopts="${lopts},test"
 lopts="${lopts},limit-cpus:"
 lopts="${lopts},no-tz"
@@ -78,6 +80,7 @@ eval set -- $args
 do_run=true
 do_reset=false
 do_test=false
+force_update=false
 
 mytz=${TZ:-}
 detect_tz=false
@@ -105,6 +108,8 @@ case "${1:-}" in
         do_sound=true ;;
     --disable-sound)
         [[ "$cmd" == "mtgo" ]] && cmdargs="${cmdargs} $1" ;;
+    --no-audio-patch|--force-volume)
+        [[ "$cmd" == "mtgo" ]] && cmdargs="${cmdargs} $1" ;;
     --limit-cpus) shift
         limit_cpus="$1" ;;
     --reset)
@@ -128,7 +133,8 @@ case "${1:-}" in
      --name) shift;
         name="$1" ;;
      --update)
-        do_update=true ;;
+        do_update=true
+        force_update=true ;;
      -e|-v|-u)
         opts="${opts} $1 $2" ;;
      --) shift ; shift
@@ -138,6 +144,8 @@ case "${1:-}" in
                 shift
             done
             image=$1
+            # a locally built image is not on the hub
+            do_update=$force_update
         fi ;;
 esac
 shift

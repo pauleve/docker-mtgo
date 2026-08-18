@@ -28,6 +28,7 @@ RUN wineboot -i \
 ENV WINEDEBUG -all,err+all,warn+chain,warn+cryptnet
 
 COPY extra/mtgo.sh /usr/local/bin/mtgo
+COPY extra/mtgo-audio-patch.py /usr/local/bin/mtgo-audio-patch
 
 ADD --chown=wine:wine https://mtgo.patch.daybreakgames.com/patch/mtg/live/client/setup.exe?v=8 /opt/mtgo/mtgo.exe
 

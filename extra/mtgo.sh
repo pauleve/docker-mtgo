@@ -2,14 +2,32 @@
 do_winecfg=false
 do_sound=false
 do_nosound=false
+do_audio_patch=true
+audio_patch_opts=""
 while [ -n "${1:-}" ]; do
    case "${1:-}" in
      --winecfg) do_winecfg=true ;;
      --sound) do_sound=true ;;
      --disable-sound) do_nosound=true ;;
+     --no-audio-patch) do_audio_patch=false ;;
+     --force-volume) audio_patch_opts="${audio_patch_opts} --force-volume" ;;
    esac
    shift
 done
+
+$do_sound || do_audio_patch=false
+
+# MTGO's own audio code does not work under wine; see
+# https://github.com/pauleve/docker-mtgo/issues/217
+audio_patch() {
+    $do_audio_patch || return 0
+    if ! command -v mtgo-audio-patch >/dev/null; then
+        echo "warning: mtgo-audio-patch is missing, sound will not work" >&2
+        do_audio_patch=false
+        return 0
+    fi
+    mtgo-audio-patch ${audio_patch_opts} "${@}"
+}
 
 if [ ! -d "${HOME}/.wine/drive_c/windows/syswow64" ]; then
     echo
@@ -67,11 +85,16 @@ workaround_dotnet
 
 setup="/opt/mtgo/mtgo.exe"
 
+audio_patch
+
 run wine ${setup}
 started=0
 s=6
 while :; do
     sleep $s
+    # the client updates itself: patch any freshly installed copy as well, so
+    # that sound keeps working after an update (from the next start on)
+    audio_patch --quiet
     winedbg --command "info proc"|grep MTGO.exe >/dev/null
     r=$?
     if [ $started -eq 0 ] && [ $r -eq 0 ]; then
